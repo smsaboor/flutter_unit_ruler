@@ -1,129 +1,195 @@
-# flutter_scale_ruler
+# flutter_unit_ruler
 
-A simple scale ruler for adding length in feet and inches and cms ([pub.dev](https://pub.dev/packages/flutter_scale_ruler)).
+A simple scale ruler for adding length in feet and inches and cms ([pub.dev](https://pub.dev/packages/flutter_unit_ruler)).
 ## Screenshots
 
-<img src="https://github.com/boffincoders/flutter_scale_ruler/blob/master/gv.gif?raw=true" height="300em" />  <img src="https://github.com/boffincoders/flutter_scale_ruler/blob/master/ss1.jpg?raw=true"  height="300em" />
+<img src="https://github.com/smsaboor/flutter_unit_ruler/blob/master/v_ruler.gif?raw=true" height="300em" />  <img src="https://github.com/smsaboor/flutter_unit_ruler/blob/master/h_ruler.jpg?raw=true"  height="300em" />
 
 ## Usage
-
-[Example](https://github.com/Appriva-labs/flutter_scale_ruler/blob/master/example/lib/main.dart)
-
 To use this package :
 
-- add the dependency to your [pubspec.yaml](https://github.com/boffincoders/flutter_scale_ruler/blob/master/pubspec.yaml) file.
+- add the dependency to your [pubspec.yaml](https://github.com/smsaboor/flutter_unit_ruler/blob/main/pubspec.yaml) file.
 
  ```yaml
  dependencies:
     flutter:
       sdk: flutter
-    flutter_scale_ruler:
+    flutter_unit_ruler:
 ```
 
 ### How to use
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_scale_ruler/flutter_scale_ruler.dart';
+import 'package:flutter_unit_ruler/flutter_unit_ruler.dart';
+import 'package:example/height_in_cm.dart';
+import 'package:example/height_in_feet.dart';
+import 'package:example/weight_in_kg.dart';
+import 'package:example/weight_in_lbs.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Scale Ruler',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Scale Ruler'),
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: RulerExample(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
-  final String title;
+
+class RulerExample extends StatefulWidget {
+  const RulerExample({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<RulerExample> createState() => _RulerExampleState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  ScaleValue? _scaleValue;
-  ScaleValue? _scaleValueCms;
+class _RulerExampleState extends State<RulerExample> {
+  String heightUnit = 'Ft';
+  String weightUnit = 'Kg';
+  bool isDarkTheme = true;
+  final darkThemeColor = const Color(0xFF0b1f28);
+  final lightThemeColor = const Color(0xffdce2e5);
+
+  void setRange(String? value) => setState(() => heightUnit = value!);
+
+  void setWeightUnit(String? value) => setState(() => weightUnit = value!);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "${_scaleValue?.feet ?? "0"} Feet ${_scaleValue?.inch ?? "0"} inches",
-                style: const TextStyle(fontSize: 18.0),
-              ),
-              const SizedBox(height: 20.0),
-              ScaleRuler.lengthMeasurement(
-                maxValue: 8,
-                minValue: 0,
-                initialValue: 4,
-                isFeet: true,
-                axis: Axis.vertical,
-                stepIndicatorColor: Colors.brown,
-                stepIndicatorDividerColor: Colors.blue,
-                onChanged: (ScaleValue? scaleValue) {
-                  if (mounted) {
-                    setState(() {
-                      _scaleValue = scaleValue;
-                    });
-                    debugPrint(
-                        "${scaleValue?.feet} Feet ${scaleValue?.inch} inches");
-                  }
-                },
-              ),
-              const SizedBox(height: 20.0),
-              ScaleRuler.lengthMeasurement(
-                maxValue: 80,
-                minValue: 0,
-                initialValue: 40,
-                axis: Axis.horizontal,
-                backgroundColor: Colors.yellow[500]!,
-                sliderActiveColor: Colors.green[500]!,
-                sliderInactiveColor: Colors.greenAccent,
-                onChanged: (ScaleValue? scaleValue) {
-                  if (mounted) {
-                    setState(() {
-                      _scaleValueCms = scaleValue;
-                    });
-                    debugPrint("${scaleValue?.cms} cms");
-                  }
-                },
-              ),
-              const SizedBox(height: 20.0),
-              Text(
-                "${_scaleValueCms?.cms ?? "0"} cms",
-                style: const TextStyle(fontSize: 18.0),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          backgroundColor: isDarkTheme ? darkThemeColor : lightThemeColor,
+          appBar: AppBar(
+            title: const Text('Ruler Demo'),
+            actions: [
+              Switch(
+                value: isDarkTheme,
+                onChanged: (value) => setState(() => isDarkTheme = value),
               ),
             ],
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: 'Vertical Ruler'),
+                Tab(text: 'Horizontal Ruler'),
+              ],
+            ),
           ),
-        ),
+          body: TabBarView(children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Column(
+                children: [
+                  Text(
+                    "Height in",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: isDarkTheme ? Colors.white : Colors.black54,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: ['Ft', 'Cm'].map((unit) {
+                      return Row(
+                        children: [
+                          Transform.scale(
+                            scale: 1.1,
+                            child: Radio<String>(
+                              value: unit,
+                              activeColor: const Color(0xFF3EB48C),
+                              groupValue: heightUnit,
+                              onChanged: setRange,
+                            ),
+                          ),
+                          Text(
+                            unit,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: isDarkTheme ? Colors.grey : Colors.black54,
+                            ),
+                          ),
+                          const SizedBox(width: 50),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 50),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: heightUnit == "Ft"
+                        ? HeightInFeet(isDarkTheme: isDarkTheme)
+                        : HeightInCm(isDarkTheme: isDarkTheme),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Column(
+                children: [
+                  Text(
+                    "Weight in?",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: isDarkTheme ? Colors.white : Colors.black54,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: ['Kg', 'Lbs'].map((unit) {
+                      return Row(
+                        children: [
+                          Transform.scale(
+                            scale: 1.1,
+                            child: Radio<String>(
+                              value: unit,
+                              activeColor: const Color(0xFF3EB48C),
+                              groupValue: weightUnit,
+                              onChanged: setWeightUnit,
+                            ),
+                          ),
+                          Text(
+                            unit,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: isDarkTheme ? Colors.grey : Colors.black54,
+                            ),
+                          ),
+                          const SizedBox(width: 50),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 50),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: weightUnit == "Kg"
+                        ? WeightInKg(isDarkTheme: isDarkTheme)
+                        : WeightInLbs(isDarkTheme: isDarkTheme),
+                  ),
+                ],
+              ),
+            ),
+          ])
       ),
     );
   }
 }
+
 ```
 
 ## Pull Requests
@@ -134,15 +200,13 @@ Pull requests are most welcome. It usually will take me within 24-48 hours to re
 2.  Pull requests _must_ be made against `develop` branch. Any other branch (unless specified by the maintainers) will get rejected.
 
 ### Created & Maintained By
-
 > If you found this project helpful or you learned something from the source code and want to thank me, consider buying me a cup of :coffee:
 >
-> * [PayPal](https://paypal.me/boffincoders)
+> * [PayPal](https://paypal.me/mdsaboor)
 
 # License
 
-    Copyright 2024 Boffin Coders Pvt. Ltd.
-
+    Copyright (c) 2024 [Mohammad Saboor]
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at

@@ -18,7 +18,7 @@ class _WeightInKgState extends State<WeightInKg> {
   late final UnitController _unitController;
   final darkThemeColor = const Color(0xFF0b1f28);
   final lightThemeColor = const Color(0xffdce2e5);
-  final double rulerMarkerPositionLeft = 180;
+
 
   @override
   void initState() {
@@ -31,13 +31,13 @@ class _WeightInKgState extends State<WeightInKg> {
     final rulerBackgroundColor =
         widget.isDarkTheme ? darkThemeColor : lightThemeColor;
     final textColor = widget.isDarkTheme ? Colors.grey : Colors.black54;
-
+    final double rulerMarkerPositionLeft = 180;
     return Stack(
       children: [
         SizedBox(
           height: 200,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 110.0),
+            padding: const EdgeInsets.only(bottom: 100.0),
             child: UnitRuler(
               controller: _unitController,
               unitName: Unit.weight.kg,
@@ -45,13 +45,13 @@ class _WeightInKgState extends State<WeightInKg> {
               backgroundColor: rulerBackgroundColor,
               rulerPadding: EdgeInsets.only(left: rulerMarkerPositionLeft, right: 0, top: 0, bottom: 40),
               rulerMarker: Container(
-                  height: 120, width: 1, color: const Color(0xFF3EB48C)),
+                  height: 130, width: 1, color: const Color(0xFF3EB48C)),
               rulerMarkerPositionTop: 0,
               rulerMarkerPositionLeft: rulerMarkerPositionLeft+5,
               rulerAlignment: Alignment.bottomCenter,
               unitIntervalText: (index, value) => value.toInt().toString(),
               unitIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
-              unitIntervalTextPosition: 35,
+              unitIntervalTextPosition: 30,
               unitIntervalStyles: const [
                 UnitIntervalStyle(
                     color: Colors.blue, width: 1, height: 20, scale: -1),

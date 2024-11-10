@@ -53,7 +53,7 @@ class _HeightInCmState extends State<HeightInCm> {
               fontSize: 14,
             ),
             onValueChanged: (value) => setState(() => currentHeight = value.toDouble()),
-            unitIntervalTextPosition: 0,
+            unitIntervalTextPosition: 80,
             // unitIntervals: List.generate(15, (i) => UnitInterval(begin: i * 20, end: (i + 1) * 20, scale: 1)),
             unitIntervalStyles: const [
               UnitIntervalStyle(color: Colors.yellow, width: 1, height: 35, scale: -1),

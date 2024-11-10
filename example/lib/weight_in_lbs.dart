@@ -28,46 +28,47 @@ class _WeightInLbsState extends State<WeightInLbs> {
   Widget build(BuildContext context) {
     final rulerBackgroundColor = widget.isDarkTheme ? darkThemeColor : lightThemeColor;
     final textColor = widget.isDarkTheme ? Colors.grey : Colors.black54;
-
+    const double rulerMarkerPositionLeft = 180;
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 100.0),
+          padding: const EdgeInsets.only(left: 20.0, top: 40),
           child: UnitRuler(
             unitName: Unit.weight.lbs,
             controller: _unitController,
-            height: 80,
+            height: 100,
             width: MediaQuery.of(context).size.width,
             backgroundColor: rulerBackgroundColor,
             rulerPadding: const EdgeInsets.only(
-                left: 0,
-                right: 40,
-                top: 10
+                left: rulerMarkerPositionLeft,
+                right: 0,
+                top: 0,
+              bottom: 0
             ),
             scrollDirection: Axis.horizontal,
             rulerMarker: Container(height: 210, width: 1, color: const Color(
                 0xFF46E252)),
             rulerMarkerPositionTop: 10,
-            rulerMarkerPositionLeft: 20,
-            rulerAlignment: Alignment.bottomLeft,
-            rulerMargin: -111,
+            rulerMarkerPositionLeft: rulerMarkerPositionLeft+5,
+            rulerAlignment: Alignment.bottomCenter,
+            rulerMargin: 9,
             unitIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
             unitIntervalText: (index, value) => value.toInt().toString(),
-            unitIntervalTextPosition:25,
+            unitIntervalTextPosition:30,
             unitIntervalStyles: const [
               UnitIntervalStyle(
-                  color: Colors.grey, width: 1, height: 30, scale: 0),
+                  color: Colors.grey, width: 1, height: 20, scale: -1),
               UnitIntervalStyle(
-                  color: Colors.grey, width: 1, height: 25, scale: 2),
+                  color: Colors.grey, width: 1, height: 20, scale: 5),
               UnitIntervalStyle(
-                  color: Colors.grey, width: 1, height: 15, scale: -1)
+                  color: Colors.grey, width: 1, height: 30, scale: 0)
             ],
             onValueChanged: (value) => setState(() => currentWeight = value.toDouble()),
           ),
         ),
         Positioned(
-          bottom: 70,
-          left: 140,
+          bottom: 90,
+          left: 170,
           child: Text(
             "${currentWeight.toInt()} lbs",
             style: TextStyle(

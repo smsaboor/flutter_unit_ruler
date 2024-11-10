@@ -1,7 +1,7 @@
 name: flutter_unit_ruler
 description: A simple scale ruler for measure length in feet/inches and weight in inches/cm.
-version: 1.0.0
-homepage: https://github.com/boffincoders/flutter_scale_ruler
+version: 0.0.2
+homepage: https://github.com/smsaboor/flutter_unit_ruler.git
 
 environment:
   sdk: ^3.5.0

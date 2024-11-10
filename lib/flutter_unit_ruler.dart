@@ -1,3 +1,18 @@
+// Copyright [YEAR] [COPYRIGHT HOLDER]
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_unit_ruler/ruler_controller.dart';
 import 'package:flutter_unit_ruler/ruler_range.dart';
@@ -26,7 +41,7 @@ class UnitRuler extends StatefulWidget {
   final double unitIntervalTextPosition;
   final EdgeInsetsGeometry? rulerPadding;
 
-  UnitRuler({
+  const UnitRuler({super.key,
     required this.onValueChanged,
     required this.width,
     required this.unitName,
@@ -68,7 +83,7 @@ class UnitRulerState extends State<UnitRuler> {
   bool isPosFixed = false;
   String value = '';
   late ScrollController scrollController;
-  Map<int, UnitIntervalStyle> _scaleLineStyleMap = {};
+  final Map<int, UnitIntervalStyle> _scaleLineStyleMap = {};
   int itemCount = 0;
 
   @override
@@ -76,11 +91,10 @@ class UnitRulerState extends State<UnitRuler> {
     super.initState();
 
     itemCount = _calculateItemCount();
-    print(itemCount);
 
-    widget.unitIntervalStyles.forEach((element) {
+    for (var element in widget.unitIntervalStyles) {
       _scaleLineStyleMap[element.scale] = element;
-    });
+    }
 
     double initValueOffset = getPositionByValue(widget.controller?.value ?? 0);
 
@@ -96,10 +110,9 @@ class UnitRulerState extends State<UnitRuler> {
 
   int _calculateItemCount() {
     int itemCount = 0;
-    widget.unitName.unitIntervals.forEach((element) {
-      // print(element.end);
+    for (var element in widget.unitName.unitIntervals) {
       itemCount += ((element.end - element.begin) / element.scale).truncate();
-    });
+    }
     itemCount += 1;
     return itemCount;
   }
@@ -212,11 +225,10 @@ class UnitRulerState extends State<UnitRuler> {
           //     left: widget.scrollDirection == Axis.vertical ? 0 : widget.rulerMarkerPosition,
           //     child: _buildRulerScaleLine(index)),
           Align(
-              alignment: widget.rulerAlignment == null
-                  ? widget.scrollDirection == Axis.horizontal
-                      ? Alignment.topCenter
-                      : Alignment.bottomLeft
-                  : widget.rulerAlignment,
+              alignment: widget.rulerAlignment,
+              // alignment: widget.rulerAlignment ?? (widget.scrollDirection == Axis.horizontal
+              //         ? Alignment.topCenter
+              //         : Alignment.bottomLeft),
               child: _buildRulerScaleLine(index)),
           Positioned(
             bottom: widget.scrollDirection == Axis.horizontal
@@ -266,7 +278,6 @@ class UnitRulerState extends State<UnitRuler> {
         break;
       }
       var totalCount = ((config.end - config.begin) / config.scale).truncate();
-      print("totalCount = $totalCount");
       if (index <= totalCount) {
         break;
       } else {
@@ -274,7 +285,7 @@ class UnitRulerState extends State<UnitRuler> {
       }
     }
 
-    rulerScaleValue = index * currentConfig!.scale + currentConfig!.begin;
+    rulerScaleValue = index * currentConfig!.scale + currentConfig.begin;
 
     return rulerScaleValue;
   }
@@ -290,7 +301,7 @@ class UnitRulerState extends State<UnitRuler> {
         children: <Widget>[
           Listener(
             onPointerDown: (event) {
-              FocusScope.of(context).requestFocus(new FocusNode());
+              FocusScope.of(context).requestFocus(FocusNode());
               isPosFixed = false;
             },
             onPointerUp: (event) {},
