@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_unit_ruler/ruler_controller.dart';
 import 'package:flutter_unit_ruler/ruler_range.dart';
@@ -20,28 +19,105 @@ import 'package:flutter_unit_ruler/scale_line.dart';
 import 'package:flutter_unit_ruler/triangle_painter.dart';
 import 'package:flutter_unit_ruler/unit.dart';
 
+/// A callback function signature used for notifying when a ruler value has changed.
 typedef ValueChangedCallback = void Function(num value);
 
+/// A class representing the UnitRuler, a digital tool for measuring various units like weight and length.
 class UnitRuler extends StatefulWidget {
+  /// A callback function that is triggered when the value changes.
   final ValueChangedCallback onValueChanged;
+
+  /// A function that provides the text to display for a unit interval.
+  ///
+  /// The function takes two parameters:
+  /// - [index]: the index of the unit interval.
+  /// - [rulerScaleValue]: the value of the scale at that interval.
+  /// It returns a [String] that will be displayed as the text for that unit interval.
   final String Function(int index, num rulerScaleValue) unitIntervalText;
+
+  /// The width of the ruler widget.
+  ///
+  /// This defines how wide the ruler should be, typically used for controlling the overall layout and appearance.
   final double width;
+
+  /// The height of the ruler widget.
+  ///
+  /// This defines how tall the ruler should be, allowing you to control the ruler's layout along with the width.
   final double height;
+
+  /// The scroll direction of the ruler.
+  ///
+  /// Specifies whether the ruler scrolls vertically or horizontally. This can be set to either [Axis.horizontal] or [Axis.vertical].
+
   final Axis scrollDirection;
+
+  /// The text style applied to the unit interval text.
+  ///
+  /// This defines how the unit interval labels (e.g., "kg", "cm") will appear, including properties like font size, weight, and color.
   final TextStyle unitIntervalTextStyle;
+
+  /// A list of styles that determine how each unit interval is rendered.
+  ///
+  /// Each entry in the list represents a different style for a unit interval. This allows customization of appearance, such as color or font size, for each unit.
   final List<UnitIntervalStyle> unitIntervalStyles;
+
+  /// A widget that represents the marker displayed on the ruler.
+  ///
+  /// This widget could be a custom graphic or indicator to mark specific points on the ruler. If `null`, no marker is displayed.
   final Widget? rulerMarker;
+
+  /// The margin around the ruler, providing space between the ruler and its surrounding widgets.
+  ///
+  /// This allows you to control the distance between the ruler and other elements in the layout.
   final double rulerMargin;
+
+  /// The background color of the UnitRuler widget.
+  /// Used to customize the ruler's background.
   final Color backgroundColor;
+
+  /// The controller used to manage the ruler's state and interactions.
   final UnitController? controller;
+
+  /// The name of the unit being measured.
+  ///
+  /// This defines the unit of measurement (e.g., "kg", "cm", "pound") that is displayed on the ruler.
+  /// The type `UnitName` could be an enum or a class that specifies various unit types.
   final UnitName unitName;
+
+  /// The vertical position of the ruler marker.
+  ///
+  /// This defines the distance from the top of the ruler to the position of the marker. It is a value that
+  /// controls where the marker will be placed vertically along the ruler.
   final double rulerMarkerPositionTop;
+
+  /// The horizontal position of the ruler marker.
+  ///
+  /// This defines the distance from the left edge of the ruler to the position of the marker. It controls
+  /// where the marker will be placed horizontally along the ruler.
   final double rulerMarkerPositionLeft;
+
+  /// The alignment of the ruler.
+  ///
+  /// This controls how the ruler's content is aligned within the available space. It can be used to control
+  /// the alignment of both the ruler and its markers (e.g., [Alignment.center], [Alignment.topLeft]).
   final Alignment rulerAlignment;
+
+  /// The position of the unit interval text.
+  ///
+  /// This defines the vertical position where the unit interval text (e.g., "kg", "cm") will be placed along
+  /// the ruler. It helps position the text relative to the ruler markers or other elements.
   final double unitIntervalTextPosition;
+
+  /// Padding for the ruler widget.
+  ///
+  /// This provides padding around the ruler, adding space between the ruler and any other surrounding widgets.
+  /// It uses [EdgeInsetsGeometry] to allow for different padding values on each side.
   final EdgeInsetsGeometry? rulerPadding;
 
-  const UnitRuler({super.key,
+  /// Creates an instance of the UnitRuler.
+  /// This constructor initializes the ruler with default settings.
+  const UnitRuler({
+    super.key,
     required this.onValueChanged,
     required this.width,
     required this.unitName,
@@ -78,13 +154,39 @@ class UnitRuler extends StatefulWidget {
   }
 }
 
+/// The state class for [UnitRuler], responsible for managing its dynamic behavior and UI.
 class UnitRulerState extends State<UnitRuler> {
+  /// The last scroll offset position.
+  ///
+  /// This value stores the previous scroll position of the ruler, which can be used to detect changes in
+  /// the scroll state and for smoother transitions when the ruler is scrolled.
   double lastOffset = 0;
+
+  /// Flag indicating whether the position of the ruler is fixed.
+  ///
+  /// This boolean value tracks whether the ruler's position is fixed (i.e., not scrollable). It can be used
+  /// to determine if the ruler should respond to user gestures, such as scrolling or dragging.
   bool isPosFixed = false;
+
+  /// The current value displayed on the ruler.
+  ///
+  /// This string stores the value shown by the ruler at any given moment. It can represent measurements like
+  /// weight, length, or other units and may change dynamically as the user interacts with the ruler.
   String value = '';
+
+  /// The scroll controller for managing scroll events of the ruler.
+  ///
+  /// [scrollController] is used to control and listen to scroll events for the ruler widget. It can be used
+  /// to synchronize the ruler's movement with the scroll view and trigger updates when the user scrolls.
   late ScrollController scrollController;
-  final Map<int, UnitIntervalStyle> _scaleLineStyleMap = {};
+
+  /// The number of items (unit intervals) on the ruler.
+  ///
+  /// This value represents the total number of unit intervals (e.g., "kg", "cm", etc.) displayed on the ruler.
+  /// It is useful for determining how many intervals should be drawn and for layout calculations.
   int itemCount = 0;
+
+  final Map<int, UnitIntervalStyle> _scaleLineStyleMap = {};
 
   @override
   void initState() {
@@ -256,6 +358,11 @@ class UnitRulerState extends State<UnitRuler> {
 
   final double _ruleScaleInterval = 10;
 
+  /// Fixes the scroll offset position.
+  ///
+  /// This method adjusts or fixes the scroll offset of the ruler based on certain conditions. It may be used
+  /// when the ruler's position needs to be locked or adjusted to a specific point, for example, when a value
+  /// or scale is selected.
   void fixOffset() {
     int tempFixedOffset = (scrollController.offset + 0.5) ~/ 1;
 
@@ -269,6 +376,11 @@ class UnitRulerState extends State<UnitRuler> {
     });
   }
 
+  /// Returns the ruler scale value for a given index.
+  ///
+  /// This method calculates and returns the value of the ruler at a specific index. The index typically
+  /// corresponds to the position of the ruler scale, and the value is a numeric representation of the unit
+  /// measurement at that index.
   num getRulerScaleValue(int index) {
     num rulerScaleValue = 0;
     UnitInterval? currentConfig;
@@ -337,7 +449,7 @@ class UnitRulerState extends State<UnitRuler> {
           ),
           Positioned(
               top: widget.rulerMarkerPositionTop,
-              left:widget.rulerMarkerPositionLeft,
+              left: widget.rulerMarkerPositionLeft,
               child: widget.rulerMarker ?? _buildMark())
           // Align(
           //   alignment: widget.scrollDirection == Axis.horizontal ? Alignment.topCenter : Alignment.center,
@@ -369,6 +481,11 @@ class UnitRulerState extends State<UnitRuler> {
     }
   }
 
+  /// Checks if the ranges of the UnitRuler have changed compared to the old widget.
+  ///
+  /// This method compares the current configuration of the ruler with the previous configuration
+  /// (provided via `oldWidget`). It returns true if the ranges (e.g., the unit intervals or scale) have
+  /// changed, indicating that the widget needs to be rebuilt or updated.
   bool isRangesChanged(UnitRuler oldWidget) {
     if (oldWidget.unitName.unitIntervals.length !=
         widget.unitName.unitIntervals.length) {
@@ -388,6 +505,11 @@ class UnitRulerState extends State<UnitRuler> {
     return false;
   }
 
+  /// Returns the position on the ruler corresponding to a specific value.
+  ///
+  /// This method calculates the position (e.g., the offset or pixel position) on the ruler that corresponds
+  /// to a given value (e.g., "kg", "cm", etc.). It is used to visually align the ruler based on a specific
+  /// measurement value.
   double getPositionByValue(num value) {
     double offsetValue = 0;
     for (UnitInterval config in widget.unitName.unitIntervals) {
@@ -404,6 +526,14 @@ class UnitRulerState extends State<UnitRuler> {
     return offsetValue;
   }
 
+  /// Sets the position of the ruler based on the provided value.
+  ///
+  /// This method adjusts the ruler's position (such as the scroll offset or marker position) based on the
+  /// given value (e.g., "kg", "cm", etc.). It is used to align the ruler visually to a specific value,
+  /// ensuring that the ruler's display corresponds to the provided measurement.
+  ///
+  /// Example: If the value is 5.0 and the ruler represents a scale for "kg", this method would adjust
+  /// the ruler so that the position corresponding to 5 kg is aligned properly.
   void setPositionByValue(num value) {
     double offsetValue = getPositionByValue(value);
     scrollController.jumpTo(offsetValue);
