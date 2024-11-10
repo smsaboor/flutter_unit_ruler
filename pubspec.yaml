@@ -1,6 +1,6 @@
 name: flutter_unit_ruler
-description: A simple scale ruler for measure length in feet/inches and weight in inches/cm.
-version: 0.0.2
+description: flutter_unit_ruler is a versatile Flutter package providing a digital ruler for measuring various units like weight (kg, pounds) and length (feet, cm). Ideal for apps in fields such as construction, fitness, and education, it offers accurate, user-friendly measurement tools, enabling easy display and interaction with diverse measurement scales.
+version: 0.0.6
 homepage: https://github.com/smsaboor/flutter_unit_ruler.git
 
 environment:
