@@ -6,10 +6,12 @@ flutter_unit_ruler is a versatile Flutter package providing a digital ruler for 
 
 ![Vertical Ruler](./v_ruler.gif) ![Horizontal Ruler](./h_ruler.gif)
 
- 
-[//]: # (<img src="https://github.com/smsaboor/flutter_unit_ruler/blob/master/h_ruler.jpg?raw=true"  height="500em" />)
+[//]: # (<img src="https://github.com/smsaboor/flutter_unit_ruler/blob/master/h_ruler.gif?raw=true"  height="500em" />)
 
-## Usage
+## How to Use
+
+This example demonstrates how to create a customizable vertical ruler using the flutter_unit_ruler package. You can use this ruler to display measurements in units like inches, centimeters, or any custom unit you define.
+
 To use this package :
 
 - add the dependency to your [pubspec.yaml](https://github.com/smsaboor/flutter_unit_ruler/blob/main/pubspec.yaml) file.
@@ -21,32 +23,21 @@ To use this package :
     flutter_unit_ruler:
 ```
 
-### How to use
 
-```dart
+- Import the necessary packages:
+
+```packges
 import 'package:flutter/material.dart';
 import 'package:flutter_unit_ruler/flutter_unit_ruler.dart';
 import 'package:flutter_unit_ruler/unit.dart';
-import 'package:flutter_unit_ruler/ruler_controller.dart';
+import 'package:flutter_unit_ruler/scale_controller.dart';
 import 'package:flutter_unit_ruler/scale_line.dart';
+```
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
-}
+- Code Example:
+Below is the full code to create a ruler with centimeter units that dynamically updates as you scroll.
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: RulerExample(),
-    );
-  }
-}
-
+```dart
 class RulerExample extends StatefulWidget {
   const RulerExample({super.key});
 
@@ -55,143 +46,104 @@ class RulerExample extends StatefulWidget {
 }
 
 class _RulerExampleState extends State<RulerExample> {
-  String heightUnit = 'Ft';
-  String weightUnit = 'Kg';
-  bool isDarkTheme = true;
-  final darkThemeColor = const Color(0xFF0b1f28);
-  final lightThemeColor = const Color(0xffdce2e5);
+  final darkThemeColor = const Color(0xFF0b1f28); // Background color for the ruler
+  late final ScaleController _scaleController; // Controller to manage the current value
 
-  void setRange(String? value) => setState(() => heightUnit = value!);
+  double currentHeight = 180.0; // Initial height value
 
-  void setWeightUnit(String? value) => setState(() => weightUnit = value!);
+  @override
+  void initState() {
+    _scaleController = ScaleController(value: currentHeight); // Initialize the controller
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-          backgroundColor: isDarkTheme ? darkThemeColor : lightThemeColor,
-          appBar: AppBar(
-            title: const Text('Ruler Demo'),
-            actions: [
-              Switch(
-                value: isDarkTheme,
-                onChanged: (value) => setState(() => isDarkTheme = value),
-              ),
-            ],
-            bottom: const TabBar(
-              tabs: [
-                Tab(text: 'Vertical Ruler'),
-                Tab(text: 'Horizontal Ruler'),
-              ],
-            ),
-          ),
-          body: TabBarView(children: [
+    return Scaffold(
+      backgroundColor: darkThemeColor,
+      appBar: AppBar(
+        title: const Text('Unit Ruler Demo'),
+      ),
+      body: Center(
+        child: Stack(
+          children: [
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Column(
-                children: [
-                  Text(
-                    "Height in",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: isDarkTheme ? Colors.white : Colors.black54,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: ['Ft', 'Cm'].map((unit) {
-                      return Row(
-                        children: [
-                          Transform.scale(
-                            scale: 1.1,
-                            child: Radio<String>(
-                              value: unit,
-                              activeColor: const Color(0xFF3EB48C),
-                              groupValue: heightUnit,
-                              onChanged: setRange,
-                            ),
-                          ),
-                          Text(
-                            unit,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: isDarkTheme ? Colors.grey : Colors.black54,
-                            ),
-                          ),
-                          const SizedBox(width: 50),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 50),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: heightUnit == "Ft"
-                        ? HeightInFeet(isDarkTheme: isDarkTheme)
-                        : HeightInCm(isDarkTheme: isDarkTheme),
-                  ),
+              padding: const EdgeInsets.only(left: 100.0),
+              child: UnitRuler(
+                height: 300, // Height of the ruler
+                width: MediaQuery.of(context).size.width, // Width of the ruler
+                controller: _scaleController, // Use scale controller for dynamic updates
+                scrollDirection: Axis.vertical, // Set ruler orientation to vertical
+                backgroundColor: darkThemeColor, // Background color
+                scaleUnit: UnitType.length.centimeter, // Set unit to centimeters
+                scaleAlignment: Alignment.topRight, // Align scale to the top-right
+                scalePadding: const EdgeInsets.only(left: 0, right: 40, top: 10), // Padding for the scale
+                scaleMargin: 120, // Margin for scale placement
+                scaleMarker: Container(
+                  height: 1.2,
+                  width: 240,
+                  color: const Color(0xFF3EB48C), // Color of scale marker
+                ),
+                scaleMarkerPositionTop: 10, // Top position of the scale marker
+                scaleMarkerPositionLeft: 20, // Left position of the scale marker
+                scaleIntervalText: (index, value) => value.toInt().toString(), // Format interval text
+                scaleIntervalTextStyle: const TextStyle(
+                  color: Color(0xFFBCC2CB),
+                  fontSize: 14,
+                ),
+                scaleIntervalTextPosition: 80, // Text position on the scale
+                scaleIntervalStyles: const [
+                  ScaleIntervalStyle(color: Colors.yellow, width: 1, height: 35, scale: -1),
+                  ScaleIntervalStyle(color: Colors.blue, width: 1.5, height: 50, scale: 0),
+                  ScaleIntervalStyle(color: Colors.redAccent, width: 1, height: 40, scale: 5),
                 ],
+                onValueChanged: (value) => setState(() => currentHeight = value.toDouble()), // Update height value
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Column(
-                children: [
-                  Text(
-                    "Weight in?",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: isDarkTheme ? Colors.white : Colors.black54,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: ['Kg', 'Lbs'].map((unit) {
-                      return Row(
-                        children: [
-                          Transform.scale(
-                            scale: 1.1,
-                            child: Radio<String>(
-                              value: unit,
-                              activeColor: const Color(0xFF3EB48C),
-                              groupValue: weightUnit,
-                              onChanged: setWeightUnit,
-                            ),
-                          ),
-                          Text(
-                            unit,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: isDarkTheme ? Colors.grey : Colors.black54,
-                            ),
-                          ),
-                          const SizedBox(width: 50),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 50),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: weightUnit == "Kg"
-                        ? WeightInKg(isDarkTheme: isDarkTheme)
-                        : WeightInLbs(isDarkTheme: isDarkTheme),
-                  ),
-                ],
+            Positioned(
+              bottom: 220,
+              left: 110,
+              child: Text(
+                "${currentHeight.toInt()} ${UnitType.length.centimeter.symbol}",  // Display current height in centimeters
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ])
+          ],
+        ),
       ),
     );
   }
 }
-
 ```
+
+## Key Features
+- Customizable Unit: You can specify a unit, such as UnitType.length.centimeter here, or define your own unit if needed.
+  - For custom units, use the scaleUnit parameter to define properties:
+  ```code
+  scaleUnit:  ScaleUnit(
+  name: 'inch',
+  symbol: 'in',
+  subDivisionCount: 12,
+  scaleIntervals: List.generate(
+  10, (i) => ScaleIntervals(begin: i * 12, end: (i + 1) * 12, scale: 1)),
+  ),
+  ```
+- Dynamic Value Updates: With ScaleController, you can monitor and dynamically update the ruler value in real-time. This feature is ideal for applications requiring precise tracking, such as fitness or construction apps, where the current measurement needs to be frequently adjusted and displayed.
+- Flexible Styling Options:
+  - Customize the ruler's appearance with extensive styling options:
+  - Background Color: Adjust the ruler background color to match your app theme.
+  - Alignment & Padding: Control alignment, padding, and margins to position the ruler exactly where it’s needed within the app.
+  - Scale Marker Styles: Modify the appearance of scale markers with customizable width, height, color, and placement.
+  - Interval Text Styles: Customize the font size, color, and positioning of interval labels, ensuring readability and consistency with your app's design.
+
+
+## Usage
+Use this example to implement a scrollable vertical or horizontal ruler in your app. Modify parameters like scrollDirection and scaleUnit for additional configurations, and feel free to style the ruler's scale markers and interval text to match your app's theme.
+
 
 ## Pull Requests
 

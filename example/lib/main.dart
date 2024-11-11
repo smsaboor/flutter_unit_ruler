@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_unit_ruler/flutter_unit_ruler.dart';
-import 'package:flutter_unit_ruler/unit.dart';
-import 'package:flutter_unit_ruler/ruler_controller.dart';
+import 'package:flutter_unit_ruler/scale_interval.dart';
+import 'package:flutter_unit_ruler/scale_unit.dart';
+import 'package:flutter_unit_ruler/scale_controller.dart';
 import 'package:flutter_unit_ruler/scale_line.dart';
 
 void main() {
@@ -104,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: heightUnit == "Ft"
-                        ? HeightInFeet(isDarkTheme: isDarkTheme)
+                        ? HeightInInches(isDarkTheme: isDarkTheme)
                         : HeightInCm(isDarkTheme: isDarkTheme),
                   ),
                 ],
@@ -159,34 +160,38 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-          ])
-      ),
+          ])),
     );
   }
 }
 
-class HeightInFeet extends StatefulWidget {
+class HeightInInches extends StatefulWidget {
   final bool isDarkTheme;
-  const HeightInFeet({required this.isDarkTheme, super.key});
+
+  const HeightInInches({required this.isDarkTheme, super.key});
+
   @override
-  State<HeightInFeet> createState() => _HeightInFeetState();
+  State<HeightInInches> createState() => _HeightInInchesState();
 }
 
-class _HeightInFeetState extends State<HeightInFeet> {
+class _HeightInInchesState extends State<HeightInInches> {
   double currentHeight = 60.0;
-  late final UnitController _unitController;
+  late final ScaleController _unitController;
   final darkThemeColor = const Color(0xFF0b1f28);
   final lightThemeColor = const Color(0xffdce2e5);
+  late final ScaleUnit _scaleUnit;
 
   @override
   void initState() {
-    _unitController = UnitController(value: currentHeight);
+    _scaleUnit = UnitType.length.inch;
+    _unitController = ScaleController(value: currentHeight);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final rulerBackgroundColor = widget.isDarkTheme ? darkThemeColor : lightThemeColor;
+    final rulerBackgroundColor =
+        widget.isDarkTheme ? darkThemeColor : lightThemeColor;
     final textColor = widget.isDarkTheme ? Colors.grey : Colors.black54;
     const double rulerMarkerPositionTop = 200.0;
     return Stack(
@@ -194,36 +199,37 @@ class _HeightInFeetState extends State<HeightInFeet> {
         Padding(
           padding: const EdgeInsets.only(left: 0.0, right: 0),
           child: UnitRuler(
-            unitName:Unit.length.inch,
-            controller: _unitController,
-            width: MediaQuery.of(context).size.width,
             height: 300,
+            width: MediaQuery.of(context).size.width,
+            scaleUnit: _scaleUnit,
+            controller: _unitController,
             scrollDirection: Axis.vertical,
             backgroundColor: rulerBackgroundColor,
-            rulerPadding: const EdgeInsets.only(
-                left: 240,
-                right: 0,
-                top: rulerMarkerPositionTop
-            ),
-            rulerAlignment: Alignment.topLeft,
-            rulerMargin: 80,
-            rulerMarker: Container(height: 1.2, width: 170, color: const Color(0xFF3EB48C)),
-            rulerMarkerPositionTop: rulerMarkerPositionTop,
-            rulerMarkerPositionLeft: 140,
-            onValueChanged: (value) => setState(() => currentHeight = value.toDouble()),
-            // unitIntervals: List.generate(10, (i) => UnitInterval(begin: i * 12, end: (i + 1) * 12, scale: 1)),
-            unitIntervalText: (index, value) {
+            scalePadding: const EdgeInsets.only(
+                left: 240, right: 0, top: rulerMarkerPositionTop),
+            scaleAlignment: Alignment.topLeft,
+            scaleMargin: 80,
+            scaleMarker: Container(
+                height: 1.2, width: 170, color: const Color(0xFF3EB48C)),
+            scaleMarkerPositionTop: rulerMarkerPositionTop,
+            scaleMarkerPositionLeft: 140,
+            scaleIntervalText: (index, value) {
               final feet = value ~/ 12;
               final inches = (value % 12).toInt();
               return inches == 0 ? "$feet.0" : "$feet.$inches";
             },
-            unitIntervalTextPosition:10,
-            unitIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
-            unitIntervalStyles: const [
-              UnitIntervalStyle(color: Colors.green, width: 1, height: 35, scale: -1),
-              UnitIntervalStyle(color: Colors.blue, width: 1.5, height: 50, scale: 0),
-              UnitIntervalStyle(color: Colors.redAccent, width: 1, height: 40, scale: 6),
+            scaleIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
+            scaleIntervalTextPosition: 10,
+            scaleIntervalStyles: const [
+              ScaleIntervalStyle(
+                  color: Colors.green, width: 1, height: 35, scale: -1),
+              ScaleIntervalStyle(
+                  color: Colors.blue, width: 1.5, height: 50, scale: 0),
+              ScaleIntervalStyle(
+                  color: Colors.redAccent, width: 1, height: 40, scale: 6),
             ],
+            onValueChanged: (value) =>
+                setState(() => currentHeight = value.toDouble()),
           ),
         ),
         Positioned(
@@ -231,8 +237,11 @@ class _HeightInFeetState extends State<HeightInFeet> {
           left: 150,
           top: 150,
           child: Text(
-            "${_formatFeetAndInches(currentHeight)} Ft",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: widget.isDarkTheme ? Colors.white : Colors.black54),
+            "${_formatFeetAndInches(currentHeight)} ${_scaleUnit.symbol}",
+            style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.w600,
+                color: widget.isDarkTheme ? Colors.white : Colors.black54),
           ),
         ),
       ],
@@ -248,6 +257,7 @@ class _HeightInFeetState extends State<HeightInFeet> {
 
 class HeightInCm extends StatefulWidget {
   final bool isDarkTheme;
+
   const HeightInCm({required this.isDarkTheme, super.key});
 
   @override
@@ -256,18 +266,20 @@ class HeightInCm extends StatefulWidget {
 
 class HeightInCmState extends State<HeightInCm> {
   double currentHeight = 152.0;
-  late UnitController _unitController;
-  UnitName unit = Unit.length.mile;
+  late ScaleController _unitController;
+  late final ScaleUnit _scaleUnit;
 
   @override
   void initState() {
-    _unitController = UnitController(value: currentHeight);
+    _scaleUnit = UnitType.length.mile;
+    _unitController = ScaleController(value: currentHeight);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = widget.isDarkTheme ? const Color(0xFF0b1f28) : const Color(0xffdce2e5);
+    final themeColor =
+        widget.isDarkTheme ? const Color(0xFF0b1f28) : const Color(0xffdce2e5);
     return Stack(
       children: [
         Padding(
@@ -275,39 +287,42 @@ class HeightInCmState extends State<HeightInCm> {
           child: UnitRuler(
             height: 300,
             width: MediaQuery.of(context).size.width,
-            unitName: unit,
+            scaleUnit: _scaleUnit,
             controller: _unitController,
             scrollDirection: Axis.vertical,
             backgroundColor: themeColor,
-            rulerAlignment: Alignment.topRight,
-            rulerPadding: const EdgeInsets.only(
-                left: 0,
-                right: 40,
-                top: 10
-            ),
-            rulerMargin: 120,
-            rulerMarker: Container(height: 1.2, width: 240, color: const Color(0xFF3EB48C)),
-            rulerMarkerPositionTop: 10,
-            rulerMarkerPositionLeft: 20,
-            unitIntervalText: (index, value) => value.toInt().toString(),
-            unitIntervalTextStyle: TextStyle(
-              color: widget.isDarkTheme ? const Color(0xFFBCC2CB) : const Color(0xFF191A1C),
+            scaleAlignment: Alignment.topRight,
+            scalePadding: const EdgeInsets.only(left: 0, right: 40, top: 10),
+            scaleMargin: 120,
+            scaleMarker: Container(
+                height: 1.2, width: 240, color: const Color(0xFF3EB48C)),
+            scaleMarkerPositionTop: 10,
+            scaleMarkerPositionLeft: 20,
+            scaleIntervalText: (index, value) => value.toInt().toString(),
+            scaleIntervalTextStyle: TextStyle(
+              color: widget.isDarkTheme
+                  ? const Color(0xFFBCC2CB)
+                  : const Color(0xFF191A1C),
               fontSize: 14,
             ),
-            unitIntervalTextPosition: 80,
-            unitIntervalStyles: const [
-              UnitIntervalStyle(color: Colors.yellow, width: 1, height: 35, scale: -1),
-              UnitIntervalStyle(color: Colors.blue, width: 1.5, height: 50, scale: 0),
-              UnitIntervalStyle(color: Colors.redAccent, width: 1, height: 40, scale: 5),
+            scaleIntervalTextPosition: 80,
+            scaleIntervalStyles: const [
+              ScaleIntervalStyle(
+                  color: Colors.yellow, width: 1, height: 35, scale: -1),
+              ScaleIntervalStyle(
+                  color: Colors.blue, width: 1.5, height: 50, scale: 0),
+              ScaleIntervalStyle(
+                  color: Colors.redAccent, width: 1, height: 40, scale: 5),
             ],
-            onValueChanged: (value) => setState(() => currentHeight = value.toDouble()),
+            onValueChanged: (value) =>
+                setState(() => currentHeight = value.toDouble()),
           ),
         ),
         Positioned(
           bottom: 220,
           left: 110,
           child: Text(
-            "${currentHeight.toInt()} ${unit.symbol}",
+            "${currentHeight.toInt()} ${_scaleUnit.symbol}",
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w600,
@@ -331,21 +346,22 @@ class WeightInKg extends StatefulWidget {
 
 class _WeightInKgState extends State<WeightInKg> {
   double currentWeight = 60.0;
-  late final UnitController _unitController;
+  late final ScaleController _unitController;
   final darkThemeColor = const Color(0xFF0b1f28);
   final lightThemeColor = const Color(0xffdce2e5);
-
+  late final ScaleUnit _scaleUnit;
 
   @override
   void initState() {
-    _unitController = UnitController(value: currentWeight);
+    _scaleUnit = UnitType.weight.kilogram;
+    _unitController = ScaleController(value: currentWeight);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final rulerBackgroundColor =
-    widget.isDarkTheme ? darkThemeColor : lightThemeColor;
+        widget.isDarkTheme ? darkThemeColor : lightThemeColor;
     final textColor = widget.isDarkTheme ? Colors.grey : Colors.black54;
     const double rulerMarkerPositionLeft = 180;
     return Stack(
@@ -356,31 +372,32 @@ class _WeightInKgState extends State<WeightInKg> {
             padding: const EdgeInsets.only(bottom: 100.0),
             child: UnitRuler(
               controller: _unitController,
-              unitName: Unit.weight.kg,
+              scaleUnit: _scaleUnit,
               scrollDirection: Axis.horizontal,
               backgroundColor: rulerBackgroundColor,
-              rulerPadding: const EdgeInsets.only(left: rulerMarkerPositionLeft, right: 0, top: 0, bottom: 40),
-              rulerMarker: Container(
+              scalePadding: const EdgeInsets.only(
+                  left: rulerMarkerPositionLeft, right: 0, top: 0, bottom: 40),
+              scaleMarker: Container(
                   height: 130, width: 1, color: const Color(0xFF3EB48C)),
-              rulerMarkerPositionTop: 0,
-              rulerMarkerPositionLeft: rulerMarkerPositionLeft+5,
-              rulerAlignment: Alignment.bottomCenter,
-              unitIntervalText: (index, value) => value.toInt().toString(),
-              unitIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
-              unitIntervalTextPosition: 30,
-              unitIntervalStyles: const [
-                UnitIntervalStyle(
+              scaleMarkerPositionTop: 0,
+              scaleMarkerPositionLeft: rulerMarkerPositionLeft + 5,
+              scaleAlignment: Alignment.bottomCenter,
+              scaleIntervalText: (index, value) => value.toInt().toString(),
+              scaleIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
+              scaleIntervalTextPosition: 30,
+              scaleIntervalStyles: const [
+                ScaleIntervalStyle(
                     color: Colors.blue, width: 1, height: 20, scale: -1),
-                UnitIntervalStyle(
+                ScaleIntervalStyle(
                     color: Colors.red, width: 1, height: 25, scale: 5),
-                UnitIntervalStyle(
+                ScaleIntervalStyle(
                     color: Colors.yellow, width: 1, height: 30, scale: 0),
               ],
               onValueChanged: (value) =>
                   setState(() => currentWeight = value.toDouble()),
               width: MediaQuery.of(context).size.width,
               height: 90,
-              rulerMargin: 9,
+              scaleMargin: 9,
             ),
           ),
         ),
@@ -388,7 +405,7 @@ class _WeightInKgState extends State<WeightInKg> {
           bottom: 10,
           left: 140,
           child: Text(
-            "${currentWeight.toInt()} kg",
+            "${currentWeight.toInt()} ${_scaleUnit.symbol}",
             style: TextStyle(
               fontSize: 34,
               fontWeight: FontWeight.w600,
@@ -403,26 +420,29 @@ class _WeightInKgState extends State<WeightInKg> {
 
 class WeightInLbs extends StatefulWidget {
   final bool isDarkTheme;
+
   const WeightInLbs({required this.isDarkTheme, super.key});
+
   @override
   State<WeightInLbs> createState() => _WeightInLbsState();
 }
 
 class _WeightInLbsState extends State<WeightInLbs> {
   double currentWeight = 60.0;
-  late final UnitController _unitController;
+  late final ScaleController _unitController;
   final darkThemeColor = const Color(0xFF0b1f28);
   final lightThemeColor = const Color(0xffdce2e5);
 
   @override
   void initState() {
-    _unitController = UnitController(value: currentWeight);
+    _unitController = ScaleController(value: currentWeight);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final rulerBackgroundColor = widget.isDarkTheme ? darkThemeColor : lightThemeColor;
+    final rulerBackgroundColor =
+        widget.isDarkTheme ? darkThemeColor : lightThemeColor;
     final textColor = widget.isDarkTheme ? Colors.grey : Colors.black54;
     const double rulerMarkerPositionLeft = 180;
     return Stack(
@@ -430,36 +450,42 @@ class _WeightInLbsState extends State<WeightInLbs> {
         Padding(
           padding: const EdgeInsets.only(left: 20.0, top: 40),
           child: UnitRuler(
-            unitName: Unit.weight.lbs,
+          // scaleUnit: UnitType.weight.pound, or
+          scaleUnit: ScaleUnit(
+              name: 'pound',
+              symbol: 'lb',
+              subDivisionCount: 10,
+              scaleIntervals: List.generate(
+                  15,
+                  (i) => ScaleIntervals(
+                      begin: i * 10, end: (i + 1) * 10, scale: 1)),
+            ),
             controller: _unitController,
             height: 100,
             width: MediaQuery.of(context).size.width,
             backgroundColor: rulerBackgroundColor,
-            rulerPadding: const EdgeInsets.only(
-                left: rulerMarkerPositionLeft,
-                right: 0,
-                top: 0,
-                bottom: 0
-            ),
+            scalePadding: const EdgeInsets.only(
+                left: rulerMarkerPositionLeft, right: 0, top: 0, bottom: 0),
             scrollDirection: Axis.horizontal,
-            rulerMarker: Container(height: 210, width: 1, color: const Color(
-                0xFF46E252)),
-            rulerMarkerPositionTop: 10,
-            rulerMarkerPositionLeft: rulerMarkerPositionLeft+5,
-            rulerAlignment: Alignment.bottomCenter,
-            rulerMargin: 9,
-            unitIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
-            unitIntervalText: (index, value) => value.toInt().toString(),
-            unitIntervalTextPosition:30,
-            unitIntervalStyles: const [
-              UnitIntervalStyle(
+            scaleMarker: Container(
+                height: 210, width: 1, color: const Color(0xFF46E252)),
+            scaleMarkerPositionTop: 10,
+            scaleMarkerPositionLeft: rulerMarkerPositionLeft + 5,
+            scaleAlignment: Alignment.bottomCenter,
+            scaleMargin: 9,
+            scaleIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
+            scaleIntervalText: (index, value) => value.toInt().toString(),
+            scaleIntervalTextPosition: 30,
+            scaleIntervalStyles: const [
+              ScaleIntervalStyle(
                   color: Colors.grey, width: 1, height: 20, scale: -1),
-              UnitIntervalStyle(
+              ScaleIntervalStyle(
                   color: Colors.grey, width: 1, height: 20, scale: 5),
-              UnitIntervalStyle(
+              ScaleIntervalStyle(
                   color: Colors.grey, width: 1, height: 30, scale: 0)
             ],
-            onValueChanged: (value) => setState(() => currentWeight = value.toDouble()),
+            onValueChanged: (value) =>
+                setState(() => currentWeight = value.toDouble()),
           ),
         ),
         Positioned(

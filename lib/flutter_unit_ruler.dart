@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_unit_ruler/ruler_controller.dart';
-import 'package:flutter_unit_ruler/ruler_range.dart';
+import 'package:flutter_unit_ruler/scale_controller.dart';
+import 'package:flutter_unit_ruler/scale_interval.dart';
 import 'package:flutter_unit_ruler/scale_line.dart';
 import 'package:flutter_unit_ruler/triangle_painter.dart';
-import 'package:flutter_unit_ruler/unit.dart';
+import 'package:flutter_unit_ruler/scale_unit.dart';
 
 /// A callback function signature used for notifying when a ruler value has changed.
 typedef ValueChangedCallback = void Function(num value);
@@ -33,7 +33,7 @@ class UnitRuler extends StatefulWidget {
   /// - [index]: the index of the unit interval.
   /// - [rulerScaleValue]: the value of the scale at that interval.
   /// It returns a [String] that will be displayed as the text for that unit interval.
-  final String Function(int index, num rulerScaleValue) unitIntervalText;
+  final String Function(int index, num rulerScaleValue) scaleIntervalText;
 
   /// The width of the ruler widget.
   ///
@@ -54,65 +54,65 @@ class UnitRuler extends StatefulWidget {
   /// The text style applied to the unit interval text.
   ///
   /// This defines how the unit interval labels (e.g., "kg", "cm") will appear, including properties like font size, weight, and color.
-  final TextStyle unitIntervalTextStyle;
+  final TextStyle scaleIntervalTextStyle;
 
   /// A list of styles that determine how each unit interval is rendered.
   ///
   /// Each entry in the list represents a different style for a unit interval. This allows customization of appearance, such as color or font size, for each unit.
-  final List<UnitIntervalStyle> unitIntervalStyles;
+  final List<ScaleIntervalStyle> scaleIntervalStyles;
 
   /// A widget that represents the marker displayed on the ruler.
   ///
   /// This widget could be a custom graphic or indicator to mark specific points on the ruler. If `null`, no marker is displayed.
-  final Widget? rulerMarker;
+  final Widget? scaleMarker;
 
   /// The margin around the ruler, providing space between the ruler and its surrounding widgets.
   ///
   /// This allows you to control the distance between the ruler and other elements in the layout.
-  final double rulerMargin;
+  final double scaleMargin;
 
   /// The background color of the UnitRuler widget.
   /// Used to customize the ruler's background.
   final Color backgroundColor;
 
   /// The controller used to manage the ruler's state and interactions.
-  final UnitController? controller;
+  final ScaleController? controller;
 
   /// The name of the unit being measured.
   ///
   /// This defines the unit of measurement (e.g., "kg", "cm", "pound") that is displayed on the ruler.
   /// The type `UnitName` could be an enum or a class that specifies various unit types.
-  final UnitName unitName;
+  final ScaleUnit scaleUnit;
 
   /// The vertical position of the ruler marker.
   ///
   /// This defines the distance from the top of the ruler to the position of the marker. It is a value that
   /// controls where the marker will be placed vertically along the ruler.
-  final double rulerMarkerPositionTop;
+  final double scaleMarkerPositionTop;
 
   /// The horizontal position of the ruler marker.
   ///
   /// This defines the distance from the left edge of the ruler to the position of the marker. It controls
   /// where the marker will be placed horizontally along the ruler.
-  final double rulerMarkerPositionLeft;
+  final double scaleMarkerPositionLeft;
 
   /// The alignment of the ruler.
   ///
   /// This controls how the ruler's content is aligned within the available space. It can be used to control
   /// the alignment of both the ruler and its markers (e.g., [Alignment.center], [Alignment.topLeft]).
-  final Alignment rulerAlignment;
+  final Alignment scaleAlignment;
 
   /// The position of the unit interval text.
   ///
   /// This defines the vertical position where the unit interval text (e.g., "kg", "cm") will be placed along
   /// the ruler. It helps position the text relative to the ruler markers or other elements.
-  final double unitIntervalTextPosition;
+  final double scaleIntervalTextPosition;
 
   /// Padding for the ruler widget.
   ///
   /// This provides padding around the ruler, adding space between the ruler and any other surrounding widgets.
   /// It uses [EdgeInsetsGeometry] to allow for different padding values on each side.
-  final EdgeInsetsGeometry? rulerPadding;
+  final EdgeInsetsGeometry? scalePadding;
 
   /// Creates an instance of the UnitRuler.
   /// This constructor initializes the ruler with default settings.
@@ -120,30 +120,30 @@ class UnitRuler extends StatefulWidget {
     super.key,
     required this.onValueChanged,
     required this.width,
-    required this.unitName,
-    required this.rulerPadding,
-    required this.rulerAlignment,
+    required this.scaleUnit,
+    required this.scalePadding,
+    required this.scaleAlignment,
     required this.scrollDirection,
-    required this.rulerMarkerPositionTop,
-    required this.rulerMarkerPositionLeft,
+    required this.scaleMarkerPositionTop,
+    required this.scaleMarkerPositionLeft,
     required this.height,
-    required this.unitIntervalText,
-    required this.unitIntervalTextPosition,
-    this.rulerMargin = 0,
-    this.unitIntervalStyles = const [
-      UnitIntervalStyle(
+    required this.scaleIntervalText,
+    required this.scaleIntervalTextPosition,
+    this.scaleMargin = 0,
+    this.scaleIntervalStyles = const [
+      ScaleIntervalStyle(
           scale: 0,
           color: Color.fromARGB(255, 188, 194, 203),
           width: 2,
           height: 32),
-      UnitIntervalStyle(
+      ScaleIntervalStyle(
           color: Color.fromARGB(255, 188, 194, 203), width: 1, height: 20),
     ],
-    this.unitIntervalTextStyle = const TextStyle(
+    this.scaleIntervalTextStyle = const TextStyle(
       color: Color.fromARGB(255, 188, 194, 203),
       fontSize: 14,
     ),
-    this.rulerMarker,
+    this.scaleMarker,
     this.backgroundColor = Colors.white,
     this.controller,
   });
@@ -186,7 +186,7 @@ class UnitRulerState extends State<UnitRuler> {
   /// It is useful for determining how many intervals should be drawn and for layout calculations.
   int itemCount = 0;
 
-  final Map<int, UnitIntervalStyle> _scaleLineStyleMap = {};
+  final Map<int, ScaleIntervalStyle> _scaleLineStyleMap = {};
 
   @override
   void initState() {
@@ -194,7 +194,7 @@ class UnitRulerState extends State<UnitRuler> {
 
     itemCount = _calculateItemCount();
 
-    for (var element in widget.unitIntervalStyles) {
+    for (var element in widget.scaleIntervalStyles) {
       _scaleLineStyleMap[element.scale] = element;
     }
 
@@ -212,7 +212,7 @@ class UnitRulerState extends State<UnitRuler> {
 
   int _calculateItemCount() {
     int itemCount = 0;
-    for (var element in widget.unitName.unitIntervals) {
+    for (var element in widget.scaleUnit.scaleIntervals) {
       itemCount += ((element.end - element.begin) / element.scale).truncate();
     }
     itemCount += 1;
@@ -225,7 +225,7 @@ class UnitRulerState extends State<UnitRuler> {
     if (currentIndex < 0) currentIndex = 0;
     num currentValue = getRulerScaleValue(currentIndex);
 
-    var lastConfig = widget.unitName.unitIntervals.last;
+    var lastConfig = widget.scaleUnit.scaleIntervals.last;
     if (currentValue > lastConfig.end) currentValue = lastConfig.end;
 
     widget.onValueChanged(currentValue);
@@ -267,8 +267,8 @@ class UnitRulerState extends State<UnitRuler> {
     double height = 0;
     Color color = const Color.fromARGB(255, 188, 194, 203);
     int scale = index %
-        widget.unitName
-            .unitGroup; // give 12 bcz want to give for feet which has 12 inches
+        widget.scaleUnit
+            .subDivisionCount; // give 12 bcz want to give for feet which has 12 inches
 
     if (_scaleLineStyleMap[scale] != null) {
       width = widget.scrollDirection == Axis.horizontal
@@ -327,26 +327,26 @@ class UnitRulerState extends State<UnitRuler> {
           //     left: widget.scrollDirection == Axis.vertical ? 0 : widget.rulerMarkerPosition,
           //     child: _buildRulerScaleLine(index)),
           Align(
-              alignment: widget.rulerAlignment,
+              alignment: widget.scaleAlignment,
               // alignment: widget.rulerAlignment ?? (widget.scrollDirection == Axis.horizontal
               //         ? Alignment.topCenter
               //         : Alignment.bottomLeft),
               child: _buildRulerScaleLine(index)),
           Positioned(
             bottom: widget.scrollDirection == Axis.horizontal
-                ? widget.unitIntervalTextPosition
+                ? widget.scaleIntervalTextPosition
                 : 0,
             left: widget.scrollDirection == Axis.horizontal
                 ? -50 + _ruleScaleInterval / 2
-                : widget.unitIntervalTextPosition + _ruleScaleInterval / .2,
+                : widget.scaleIntervalTextPosition + _ruleScaleInterval / .2,
             width: widget.scrollDirection == Axis.horizontal ? 100 : 40,
-            child: index % widget.unitName.unitGroup ==
+            child: index % widget.scaleUnit.subDivisionCount ==
                     0 // give 12 bcz for inches
                 ? Container(
                     alignment: Alignment.center,
                     child: Text(
-                      widget.unitIntervalText(index, getRulerScaleValue(index)),
-                      style: widget.unitIntervalTextStyle,
+                      widget.scaleIntervalText(index, getRulerScaleValue(index)),
+                      style: widget.scaleIntervalTextStyle,
                     ),
                   )
                 : const SizedBox(),
@@ -383,10 +383,10 @@ class UnitRulerState extends State<UnitRuler> {
   /// measurement at that index.
   num getRulerScaleValue(int index) {
     num rulerScaleValue = 0;
-    UnitInterval? currentConfig;
-    for (UnitInterval config in widget.unitName.unitIntervals) {
+    ScaleIntervals? currentConfig;
+    for (ScaleIntervals config in widget.scaleUnit.scaleIntervals) {
       currentConfig = config;
-      if (currentConfig == widget.unitName.unitIntervals.last) {
+      if (currentConfig == widget.scaleUnit.scaleIntervals.last) {
         break;
       }
       var totalCount = ((config.end - config.begin) / config.scale).truncate();
@@ -406,9 +406,9 @@ class UnitRulerState extends State<UnitRuler> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: widget.width +
-          (widget.scrollDirection == Axis.vertical ? 0 : widget.rulerMargin),
+          (widget.scrollDirection == Axis.vertical ? 0 : widget.scaleMargin),
       height: widget.height +
-          (widget.scrollDirection == Axis.vertical ? widget.rulerMargin : 0),
+          (widget.scrollDirection == Axis.vertical ? widget.scaleMargin : 0),
       child: Stack(
         children: <Widget>[
           Listener(
@@ -439,7 +439,7 @@ class UnitRulerState extends State<UnitRuler> {
                       //   right: (widget.width - _ruleScaleInterval) / (widget.scrollDirection == Axis.horizontal ? 2 : 4 ),
                       //   top: widget.scrollDirection == Axis.horizontal ? 0 : (widget.width - _ruleScaleInterval) / 1.85, // comment it if want horizontal ruler
                       // ),
-                      padding: widget.rulerPadding,
+                      padding: widget.scalePadding,
                       itemExtent: _ruleScaleInterval,
                       itemCount: itemCount,
                       controller: scrollController,
@@ -448,9 +448,9 @@ class UnitRulerState extends State<UnitRuler> {
                     ))),
           ),
           Positioned(
-              top: widget.rulerMarkerPositionTop,
-              left: widget.rulerMarkerPositionLeft,
-              child: widget.rulerMarker ?? _buildMark())
+              top: widget.scaleMarkerPositionTop,
+              left: widget.scaleMarkerPositionLeft,
+              child: widget.scaleMarker ?? _buildMark())
           // Align(
           //   alignment: widget.scrollDirection == Axis.horizontal ? Alignment.topCenter : Alignment.center,
           //   child: widget.rulerMarker ?? _buildMark(),
@@ -487,15 +487,15 @@ class UnitRulerState extends State<UnitRuler> {
   /// (provided via `oldWidget`). It returns true if the ranges (e.g., the unit intervals or scale) have
   /// changed, indicating that the widget needs to be rebuilt or updated.
   bool isRangesChanged(UnitRuler oldWidget) {
-    if (oldWidget.unitName.unitIntervals.length !=
-        widget.unitName.unitIntervals.length) {
+    if (oldWidget.scaleUnit.scaleIntervals.length !=
+        widget.scaleUnit.scaleIntervals.length) {
       return true;
     }
 
-    if (widget.unitName.unitIntervals.isEmpty) return false;
-    for (int i = 0; i < widget.unitName.unitIntervals.length; i++) {
-      UnitInterval oldRange = oldWidget.unitName.unitIntervals[i];
-      UnitInterval range = widget.unitName.unitIntervals[i];
+    if (widget.scaleUnit.scaleIntervals.isEmpty) return false;
+    for (int i = 0; i < widget.scaleUnit.scaleIntervals.length; i++) {
+      ScaleIntervals oldRange = oldWidget.scaleUnit.scaleIntervals[i];
+      ScaleIntervals range = widget.scaleUnit.scaleIntervals[i];
       if (oldRange.begin != range.begin ||
           oldRange.end != range.end ||
           oldRange.scale != range.scale) {
@@ -512,7 +512,7 @@ class UnitRulerState extends State<UnitRuler> {
   /// measurement value.
   double getPositionByValue(num value) {
     double offsetValue = 0;
-    for (UnitInterval config in widget.unitName.unitIntervals) {
+    for (ScaleIntervals config in widget.scaleUnit.scaleIntervals) {
       if (config.begin <= value && config.end >= value) {
         offsetValue +=
             ((value - config.begin) / config.scale) * _ruleScaleInterval;
