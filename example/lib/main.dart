@@ -192,14 +192,13 @@ class _HeightInInchesState extends State<HeightInInches> {
 
   @override
   Widget build(BuildContext context) {
-    final rulerBackgroundColor =
-        widget.isDarkTheme ? darkThemeColor : lightThemeColor;
+    final rulerBackgroundColor = widget.isDarkTheme ? darkThemeColor : lightThemeColor;
     final textColor = widget.isDarkTheme ? Colors.grey : Colors.black54;
     const double rulerMarkerPositionTop = 170.0;
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 0.0, right: 0),
+          padding: const EdgeInsets.only(left: 0.0, right: 30),
           child: UnitRuler(
             height: 400,
             width: MediaQuery.of(context).size.width,
@@ -208,20 +207,20 @@ class _HeightInInchesState extends State<HeightInInches> {
             scrollDirection: Axis.vertical,
             backgroundColor: rulerBackgroundColor,
             scalePadding: const EdgeInsets.only(
-                left: 240, right: 0, top: rulerMarkerPositionTop),
-            scaleAlignment: Alignment.topLeft,
+                left: 190, right: 0, top: rulerMarkerPositionTop),
+            scaleAlignment: Alignment.topRight,
             scaleMargin: 80,
             scaleMarker: Container(
-                height: 2, width: 170, color: const Color(0xFF3EB48C)),
+                height: 2, width: 200, color: const Color(0xFF3EB48C)),
             scaleMarkerPositionTop: rulerMarkerPositionTop,
-            scaleMarkerPositionLeft: 140,
+            scaleMarkerPositionLeft: 160,
             scaleIntervalText: (index, value) {
               final feet = value ~/ 12;
               final inches = (value % 12).toInt();
               return inches == 0 ? "$feet.0" : "$feet.$inches";
             },
             scaleIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
-            scaleIntervalTextPosition: 10,
+            scaleIntervalTextPosition: 0,
             scaleIntervalStyles: const [
               ScaleIntervalStyle(
                   color: Colors.white70, width: 35, height: 2, scale: -1),
@@ -239,7 +238,7 @@ class _HeightInInchesState extends State<HeightInInches> {
           left: 150,
           top: 130,
           child: Text(
-            "${_formatFeetAndInches(currentHeightInInches)} ${_scaleUnit.symbol}",
+            "${_formatFeetAndInches(currentHeightInInches)} Ft",
             style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.w600,
@@ -383,7 +382,7 @@ class _WeightInKgState extends State<WeightInKg> {
         SizedBox(
           height: 200,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 100.0),
+            padding: const EdgeInsets.only(bottom: 85.0),
             child: UnitRuler(
               controller: _unitController,
               scaleUnit: _scaleUnit,
@@ -394,11 +393,11 @@ class _WeightInKgState extends State<WeightInKg> {
               scaleMarker: Container(
                   height: 130, width: 2.5, color: const Color(0xFF3EB48C)),
               scaleMarkerPositionTop: 0,
-              scaleMarkerPositionLeft: rulerMarkerPositionLeft + 5,
-              scaleAlignment: Alignment.bottomCenter,
+              scaleMarkerPositionLeft: rulerMarkerPositionLeft + 4,
+              scaleAlignment: Alignment.topCenter,
               scaleIntervalText: (index, value) => value.toInt().toString(),
               scaleIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
-              scaleIntervalTextPosition: 45,
+              scaleIntervalTextPosition: 5,
               scaleIntervalStyles: const [
                 ScaleIntervalStyle(
                     color: Colors.white, width: 2, height: 30, scale: -1),
@@ -490,9 +489,9 @@ class _WeightInLbsState extends State<WeightInLbs> {
             scaleIntervalTextPosition: 50,
             scaleIntervalStyles: const [
               ScaleIntervalStyle(
-                  color: Colors.lightGreenAccent, width: 2, height: 35, scale: -1),
+                  color: Colors.yellow, width: 2, height: 35, scale: -1),
               ScaleIntervalStyle(
-                  color: Colors.lightGreenAccent, width: 2, height: 35, scale: 5),
+                  color: Colors.yellow, width: 2, height: 35, scale: 5),
               ScaleIntervalStyle(
                   color: Colors.red, width: 2, height: 45, scale: 0)
             ],
