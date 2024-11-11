@@ -4,7 +4,7 @@ flutter_unit_ruler is a versatile Flutter package providing a digital ruler for 
 ([pub.dev](https://pub.dev/packages/flutter_unit_ruler)).
 ## Screenshots
 
-![Vertical Ruler](https://github.com/smsaboor/flutter_unit_ruler/blob/master/v_ruler.gif?raw=true)
+![Vertical Ruler](./v_ruler.gif)
 ![Horizontal Ruler](https://github.com/smsaboor/flutter_unit_ruler/blob/master/h_ruler.gif?raw=true)
 
 <img src="https://github.com/boffincoders/flutter_scale_ruler/blob/master/v_ruler.gif?raw=true" height="300em" /> 
