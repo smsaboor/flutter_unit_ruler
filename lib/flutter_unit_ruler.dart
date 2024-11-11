@@ -335,7 +335,8 @@ class UnitRulerState extends State<UnitRuler> {
                 ? Container(
                     alignment: Alignment.center,
                     child: Text(
-                      widget.scaleIntervalText(index, getRulerScaleValue(index)),
+                      widget.scaleIntervalText(
+                          index, getRulerScaleValue(index)),
                       style: widget.scaleIntervalTextStyle,
                     ),
                   )

@@ -53,8 +53,10 @@ abstract class UnitType {
 class Length {
   /// The singleton instance of [Length].
   static final Length _instance = Length._internal();
+
   /// Private constructor for the singleton instance.
   Length._internal();
+
   /// Provides access to the singleton instance of [Length].
   factory Length() => _instance;
 
@@ -65,49 +67,53 @@ class Length {
       symbol: 'km',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          20, (i) => ScaleIntervals(begin: i * 1000, end: (i + 1) * 1000, scale: 1)),
+          20,
+          (i) =>
+              ScaleIntervals(begin: i * 1000, end: (i + 1) * 1000, scale: 1)),
     ),
     ScaleUnit(
       name: 'meter',
       symbol: 'm',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          30, (i) => ScaleIntervals(begin: i * 100, end: (i + 1) * 100, scale: 1)),
+      scaleIntervals: List.generate(30,
+          (i) => ScaleIntervals(begin: i * 100, end: (i + 1) * 100, scale: 1)),
     ),
     ScaleUnit(
       name: 'centimeter',
       symbol: 'cm',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          30, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
+      scaleIntervals: List.generate(30,
+          (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
     ),
     ScaleUnit(
       name: 'millimeter',
       symbol: 'mm',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          50, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
+      scaleIntervals: List.generate(50,
+          (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
     ),
     ScaleUnit(
       name: 'micrometer',
       symbol: 'µm',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          80, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
+      scaleIntervals: List.generate(80,
+          (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
     ),
     ScaleUnit(
       name: 'nanometer',
       symbol: 'nm',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          100, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
+      scaleIntervals: List.generate(100,
+          (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
     ),
     ScaleUnit(
       name: 'mile',
       symbol: 'mi',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          40, (i) => ScaleIntervals(begin: i * 5280, end: (i + 1) * 5280, scale: 1)),
+          40,
+          (i) =>
+              ScaleIntervals(begin: i * 5280, end: (i + 1) * 5280, scale: 1)),
     ),
     ScaleUnit(
       name: 'yard',
@@ -120,22 +126,24 @@ class Length {
       name: 'foot',
       symbol: 'ft',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          100, (i) => ScaleIntervals(begin: i * 12, end: (i + 1) * 12, scale: 1)),
+      scaleIntervals: List.generate(100,
+          (i) => ScaleIntervals(begin: i * 12, end: (i + 1) * 12, scale: 1)),
     ),
     ScaleUnit(
       name: 'inch',
       symbol: 'in',
       subDivisionCount: 12,
-      scaleIntervals: List.generate(
-          100, (i) => ScaleIntervals(begin: i * 12, end: (i + 1) * 12, scale: 1)),
+      scaleIntervals: List.generate(100,
+          (i) => ScaleIntervals(begin: i * 12, end: (i + 1) * 12, scale: 1)),
     ),
     ScaleUnit(
       name: 'nautical mile',
       symbol: 'nmi',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          500, (i) => ScaleIntervals(begin: i * 1852, end: (i + 1) * 1852, scale: 1)),
+          500,
+          (i) =>
+              ScaleIntervals(begin: i * 1852, end: (i + 1) * 1852, scale: 1)),
     ),
   ];
 
@@ -173,13 +181,14 @@ class Length {
   ScaleUnit get nauticalMile => lengths[10];
 }
 
-
 /// Represents the unit category for weight measurements (e.g., kilogram, pounds).
 class Weight {
   /// The singleton instance of [Weight].
   static final Weight _instance = Weight._internal();
+
   /// Private constructor for the singleton instance.
   Weight._internal();
+
   /// Provides access to the singleton instance of [Length].
   factory Weight() => _instance;
 
@@ -189,50 +198,54 @@ class Weight {
       name: 'gram',
       symbol: 'g',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          50, (i) => ScaleIntervals(begin: i * 100, end: (i + 1) * 100, scale: 1)),
+      scaleIntervals: List.generate(50,
+          (i) => ScaleIntervals(begin: i * 100, end: (i + 1) * 100, scale: 1)),
     ),
     ScaleUnit(
       name: 'tonne',
       symbol: 't',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          10, (i) => ScaleIntervals(begin: i * 1000, end: (i + 1) * 1000, scale: 1)),
+          10,
+          (i) =>
+              ScaleIntervals(begin: i * 1000, end: (i + 1) * 1000, scale: 1)),
     ),
     ScaleUnit(
       name: 'kilogram',
       symbol: 'kg',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          35, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
+      scaleIntervals: List.generate(35,
+          (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
     ),
     ScaleUnit(
       name: 'milligram',
       symbol: 'mg',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          50, (i) => ScaleIntervals(begin: i * 100, end: (i + 1) * 100, scale: 1)),
+      scaleIntervals: List.generate(50,
+          (i) => ScaleIntervals(begin: i * 100, end: (i + 1) * 100, scale: 1)),
     ),
     ScaleUnit(
       name: 'microgram',
       symbol: 'µg',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          50, (i) => ScaleIntervals(begin: i * 100, end: (i + 1) * 100, scale: 1)),
+      scaleIntervals: List.generate(50,
+          (i) => ScaleIntervals(begin: i * 100, end: (i + 1) * 100, scale: 1)),
     ),
     ScaleUnit(
       name: 'imperial ton',
       symbol: 'imp ton',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          5, (i) => ScaleIntervals(begin: i * 1016, end: (i + 1) * 1016, scale: 1)),
+          5,
+          (i) =>
+              ScaleIntervals(begin: i * 1016, end: (i + 1) * 1016, scale: 1)),
     ),
     ScaleUnit(
       name: 'US ton',
       symbol: 'ton',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          5, (i) => ScaleIntervals(begin: i * 907, end: (i + 1) * 907, scale: 1)),
+      scaleIntervals: List.generate(5,
+          (i) => ScaleIntervals(begin: i * 907, end: (i + 1) * 907, scale: 1)),
     ),
     ScaleUnit(
       name: 'stone',
@@ -245,15 +258,15 @@ class Weight {
       name: 'pound',
       symbol: 'lb',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          15, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
+      scaleIntervals: List.generate(15,
+          (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
     ),
     ScaleUnit(
       name: 'ounce',
       symbol: 'oz',
       subDivisionCount: 10,
-      scaleIntervals: List.generate(
-          20, (i) => ScaleIntervals(begin: i * 16, end: (i + 1) * 16, scale: 1)),
+      scaleIntervals: List.generate(20,
+          (i) => ScaleIntervals(begin: i * 16, end: (i + 1) * 16, scale: 1)),
     ),
   ];
 
@@ -287,4 +300,3 @@ class Weight {
   /// Returns the [ScaleUnit] for ounces.
   ScaleUnit get ounce => weights[9];
 }
-
