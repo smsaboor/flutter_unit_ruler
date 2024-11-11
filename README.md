@@ -6,6 +6,8 @@ flutter_unit_ruler is a versatile Flutter package providing a digital ruler for 
 
 ![Vertical Ruler](https://github.com/smsaboor/flutter_unit_ruler/blob/master/v_ruler.gif?raw=true)
 ![Horizontal Ruler](https://github.com/smsaboor/flutter_unit_ruler/blob/master/h_ruler.gif?raw=true)
+
+<img src="https://github.com/boffincoders/flutter_scale_ruler/blob/master/v_ruler.gif?raw=true" height="300em" /> 
   
 [//]: # (<img src="https://github.com/smsaboor/flutter_unit_ruler/blob/master/h_ruler.jpg?raw=true"  height="500em" />)
 
@@ -26,10 +28,9 @@ To use this package :
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_unit_ruler/flutter_unit_ruler.dart';
-import 'package:example/height_in_cm.dart';
-import 'package:example/height_in_feet.dart';
-import 'package:example/weight_in_kg.dart';
-import 'package:example/weight_in_lbs.dart';
+import 'package:flutter_unit_ruler/unit.dart';
+import 'package:flutter_unit_ruler/ruler_controller.dart';
+import 'package:flutter_unit_ruler/scale_line.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,8 +48,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
 
 class RulerExample extends StatefulWidget {
   const RulerExample({super.key});
