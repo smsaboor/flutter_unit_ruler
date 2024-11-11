@@ -65,35 +65,35 @@ class Length {
       symbol: 'km',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          10, (i) => ScaleIntervals(begin: i * 1000, end: (i + 1) * 1000, scale: 1)),
+          20, (i) => ScaleIntervals(begin: i * 1000, end: (i + 1) * 1000, scale: 1)),
     ),
     ScaleUnit(
       name: 'meter',
       symbol: 'm',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          10, (i) => ScaleIntervals(begin: i * 100, end: (i + 1) * 100, scale: 1)),
+          30, (i) => ScaleIntervals(begin: i * 100, end: (i + 1) * 100, scale: 1)),
     ),
     ScaleUnit(
       name: 'centimeter',
       symbol: 'cm',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          15, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
+          30, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
     ),
     ScaleUnit(
       name: 'millimeter',
       symbol: 'mm',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          20, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
+          50, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
     ),
     ScaleUnit(
       name: 'micrometer',
       symbol: 'µm',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          50, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
+          80, (i) => ScaleIntervals(begin: i * 10, end: (i + 1) * 10, scale: 1)),
     ),
     ScaleUnit(
       name: 'nanometer',
@@ -107,7 +107,7 @@ class Length {
       symbol: 'mi',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          5, (i) => ScaleIntervals(begin: i * 5280, end: (i + 1) * 5280, scale: 1)),
+          40, (i) => ScaleIntervals(begin: i * 5280, end: (i + 1) * 5280, scale: 1)),
     ),
     ScaleUnit(
       name: 'yard',
@@ -121,21 +121,21 @@ class Length {
       symbol: 'ft',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          10, (i) => ScaleIntervals(begin: i * 12, end: (i + 1) * 12, scale: 1)),
+          100, (i) => ScaleIntervals(begin: i * 12, end: (i + 1) * 12, scale: 1)),
     ),
     ScaleUnit(
       name: 'inch',
       symbol: 'in',
       subDivisionCount: 12,
       scaleIntervals: List.generate(
-          10, (i) => ScaleIntervals(begin: i * 12, end: (i + 1) * 12, scale: 1)),
+          100, (i) => ScaleIntervals(begin: i * 12, end: (i + 1) * 12, scale: 1)),
     ),
     ScaleUnit(
       name: 'nautical mile',
       symbol: 'nmi',
       subDivisionCount: 10,
       scaleIntervals: List.generate(
-          5, (i) => ScaleIntervals(begin: i * 1852, end: (i + 1) * 1852, scale: 1)),
+          500, (i) => ScaleIntervals(begin: i * 1852, end: (i + 1) * 1852, scale: 1)),
     ),
   ];
 

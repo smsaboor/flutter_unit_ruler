@@ -271,24 +271,14 @@ class UnitRulerState extends State<UnitRuler> {
             .subDivisionCount; // give 12 bcz want to give for feet which has 12 inches
 
     if (_scaleLineStyleMap[scale] != null) {
-      width = widget.scrollDirection == Axis.horizontal
-          ? _scaleLineStyleMap[scale]!.width
-          : _scaleLineStyleMap[scale]!
-              .height; // Swap width with height for vertical ruler else horizonatal
-      height = widget.scrollDirection == Axis.horizontal
-          ? _scaleLineStyleMap[scale]!.height
-          : _scaleLineStyleMap[scale]!.width; // Swap height with width
+      width = _scaleLineStyleMap[scale]!.width;
+      height = _scaleLineStyleMap[scale]!.height;
       color = _scaleLineStyleMap[scale]!.color;
     } else {
       if (_scaleLineStyleMap[-1] != null) {
         scale = -1;
-        width = widget.scrollDirection == Axis.horizontal
-            ? _scaleLineStyleMap[scale]!.width
-            : _scaleLineStyleMap[scale]!
-                .height; // Swap width with height for vertical ruler else horizonatal
-        height = widget.scrollDirection == Axis.horizontal
-            ? _scaleLineStyleMap[scale]!.height
-            : _scaleLineStyleMap[scale]!.width; // Swap height with width
+        width = _scaleLineStyleMap[scale]!.width;
+        height = _scaleLineStyleMap[scale]!.height;
         color = _scaleLineStyleMap[scale]!.color;
       } else {
         if (scale == 0) {
