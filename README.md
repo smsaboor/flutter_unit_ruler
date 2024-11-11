@@ -1,6 +1,6 @@
 # flutter_unit_ruler
 
-flutter_unit_ruler is a versatile Flutter package that provides a digital ruler capable of measuring a wide range of units, including length (kilometers, meters, feet, inches) and weight (kilograms, pounds, tons). This tool is ideal for applications in construction, fitness, education, and other fields requiring accurate, interactive measurement displays. It offers seamless customization options, allowing developers to set unit types, scale divisions, and visual styles, making it easy to integrate precise and user-friendly measurement tools into your app.
+flutter_unit_ruler is a versatile Flutter package that provides a digital ruler (Horizontal and Vertical) capable of measuring a wide range of units, including length (kilometers, meters, feet, inches) and weight (kilograms, pounds, tons). This tool is ideal for applications in construction, fitness, education, and other fields requiring accurate, interactive measurement displays. It offers seamless customization options, allowing developers to set unit types, scale divisions, and visual styles, making it easy to integrate precise and user-friendly measurement tools into your app.
 ([pub.dev](https://pub.dev/packages/flutter_unit_ruler)).
 ## Screenshots
 
@@ -80,7 +80,7 @@ class _RulerExampleState extends State<RulerExample> {
                 scalePadding: const EdgeInsets.only(left: 0, right: 40, top: 10), // Padding for the scale
                 scaleMargin: 120, // Margin for scale placement
                 scaleMarker: Container(
-                  height: 1.2,
+                  height: 2,
                   width: 240,
                   color: const Color(0xFF3EB48C), // Color of scale marker
                 ),
@@ -93,9 +93,9 @@ class _RulerExampleState extends State<RulerExample> {
                 ),
                 scaleIntervalTextPosition: 80, // Text position on the scale
                 scaleIntervalStyles: const [
-                  ScaleIntervalStyle(color: Colors.yellow, width: 1, height: 35, scale: -1),
-                  ScaleIntervalStyle(color: Colors.blue, width: 1.5, height: 50, scale: 0),
-                  ScaleIntervalStyle(color: Colors.redAccent, width: 1, height: 40, scale: 5),
+                  ScaleIntervalStyle(color: Colors.yellow, width: 35, height: 2, scale: -1),
+                  ScaleIntervalStyle(color: Colors.blue, width: 50, height: 2.5, scale: 0),
+                  ScaleIntervalStyle(color: Colors.redAccent, width: 40, height: 2, scale: 5),
                 ],
                 onValueChanged: (value) => setState(() => currentHeight = value.toDouble()), // Update height value
               ),

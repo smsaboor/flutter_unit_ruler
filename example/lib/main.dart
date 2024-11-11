@@ -5,6 +5,9 @@ import 'package:flutter_unit_ruler/scale_unit.dart';
 import 'package:flutter_unit_ruler/scale_controller.dart';
 import 'package:flutter_unit_ruler/scale_line.dart';
 
+const darkThemeColor = Color(0xff310ecb);
+const lightThemeColor = Color(0xffdce2e5);
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
@@ -33,8 +36,7 @@ class _HomePageState extends State<HomePage> {
   String heightUnit = 'Ft';
   String weightUnit = 'Kg';
   bool isDarkTheme = true;
-  final darkThemeColor = const Color(0xFF0b1f28);
-  final lightThemeColor = const Color(0xffdce2e5);
+
 
   void setRange(String? value) => setState(() => heightUnit = value!);
 
@@ -84,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                             scale: 1.1,
                             child: Radio<String>(
                               value: unit,
-                              activeColor: const Color(0xFF3EB48C),
+                              activeColor: Colors.white70,
                               groupValue: heightUnit,
                               onChanged: setRange,
                             ),
@@ -93,7 +95,8 @@ class _HomePageState extends State<HomePage> {
                             unit,
                             style: TextStyle(
                               fontSize: 18,
-                              color: isDarkTheme ? Colors.grey : Colors.black54,
+                              fontWeight: FontWeight.bold,
+                              color: isDarkTheme ? Colors.white : Colors.black54,
                             ),
                           ),
                           const SizedBox(width: 50),
@@ -133,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                             scale: 1.1,
                             child: Radio<String>(
                               value: unit,
-                              activeColor: const Color(0xFF3EB48C),
+                              activeColor: Colors.white70,
                               groupValue: weightUnit,
                               onChanged: setWeightUnit,
                             ),
@@ -142,7 +145,8 @@ class _HomePageState extends State<HomePage> {
                             unit,
                             style: TextStyle(
                               fontSize: 18,
-                              color: isDarkTheme ? Colors.grey : Colors.black54,
+                              fontWeight: FontWeight.bold,
+                              color: isDarkTheme ? Colors.white : Colors.black54,
                             ),
                           ),
                           const SizedBox(width: 50),
@@ -175,16 +179,14 @@ class HeightInInches extends StatefulWidget {
 }
 
 class _HeightInInchesState extends State<HeightInInches> {
-  double currentHeight = 60.0;
+  double currentHeightInInches = 68.0;
   late final ScaleController _unitController;
-  final darkThemeColor = const Color(0xFF0b1f28);
-  final lightThemeColor = const Color(0xffdce2e5);
   late final ScaleUnit _scaleUnit;
 
   @override
   void initState() {
     _scaleUnit = UnitType.length.inch;
-    _unitController = ScaleController(value: currentHeight);
+    _unitController = ScaleController(value: currentHeightInInches);
     super.initState();
   }
 
@@ -222,14 +224,14 @@ class _HeightInInchesState extends State<HeightInInches> {
             scaleIntervalTextPosition: 10,
             scaleIntervalStyles: const [
               ScaleIntervalStyle(
-                  color: Colors.green, width: 35, height: 2, scale: -1),
+                  color: Colors.white70, width: 35, height: 2, scale: -1),
               ScaleIntervalStyle(
-                  color: Colors.blue, width: 55, height: 2.5, scale: 0),
+                  color: Colors.yellow, width: 55, height: 2.5, scale: 0),
               ScaleIntervalStyle(
                   color: Colors.redAccent, width: 40, height: 2, scale: 6),
             ],
             onValueChanged: (value) =>
-                setState(() => currentHeight = value.toDouble()),
+                setState(() => currentHeightInInches = value.toDouble()),
           ),
         ),
         Positioned(
@@ -237,7 +239,7 @@ class _HeightInInchesState extends State<HeightInInches> {
           left: 150,
           top: 130,
           child: Text(
-            "${_formatFeetAndInches(currentHeight)} ${_scaleUnit.symbol}",
+            "${_formatFeetAndInches(currentHeightInInches)} ${_scaleUnit.symbol}",
             style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.w600,
@@ -272,14 +274,14 @@ class HeightInCm extends StatefulWidget {
 }
 
 class HeightInCmState extends State<HeightInCm> {
-  double currentHeight = 152.0;
+  double currentHeightInCentimeter = 152.0;
   late ScaleController _unitController;
   late final ScaleUnit _scaleUnit;
 
   @override
   void initState() {
     _scaleUnit = UnitType.length.centimeter;
-    _unitController = ScaleController(value: currentHeight);
+    _unitController = ScaleController(value: currentHeightInCentimeter);
     super.initState();
   }
 
@@ -297,7 +299,7 @@ class HeightInCmState extends State<HeightInCm> {
             scaleUnit: _scaleUnit,
             controller: _unitController,
             scrollDirection: Axis.vertical,
-            backgroundColor: themeColor,
+            backgroundColor: darkThemeColor,
             scaleAlignment: Alignment.topLeft,
             scalePadding: const EdgeInsets.only(left: 0, right: 10, top: 110),
             scaleMargin: 120,
@@ -317,19 +319,19 @@ class HeightInCmState extends State<HeightInCm> {
               ScaleIntervalStyle(
                   color: const Color(0xFFBCC2CB), width: 35, height: 2, scale: -1),
               ScaleIntervalStyle(
-                  color: Colors.blue, width: 50, height: 2.5, scale: 0),
+                  color: Colors.limeAccent, width: 50, height: 2.5, scale: 0),
               ScaleIntervalStyle(
                   color: const Color(0xFFBCC2CB), width: 40, height: 2, scale: 5),
             ],
             onValueChanged: (value) =>
-                setState(() => currentHeight = value.toDouble()),
+                setState(() => currentHeightInCentimeter = value.toDouble()),
           ),
         ),
         Positioned(
           bottom: 310,
           left: 190,
           child: Text(
-            "${currentHeight.toInt()} ${_scaleUnit.symbol}",
+            "${currentHeightInCentimeter.toInt()} ${_scaleUnit.symbol}",
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w600,
@@ -359,16 +361,14 @@ class WeightInKg extends StatefulWidget {
 }
 
 class _WeightInKgState extends State<WeightInKg> {
-  double currentWeight = 60.0;
+  double currentWeightInKilogram = 63.0;
   late final ScaleController _unitController;
-  final darkThemeColor = const Color(0xFF0b1f28);
-  final lightThemeColor = const Color(0xffdce2e5);
   late final ScaleUnit _scaleUnit;
 
   @override
   void initState() {
     _scaleUnit = UnitType.weight.kilogram;
-    _unitController = ScaleController(value: currentWeight);
+    _unitController = ScaleController(value: currentWeightInKilogram);
     super.initState();
   }
 
@@ -392,23 +392,23 @@ class _WeightInKgState extends State<WeightInKg> {
               scalePadding: const EdgeInsets.only(
                   left: rulerMarkerPositionLeft, right: 0, top: 0, bottom: 40),
               scaleMarker: Container(
-                  height: 130, width: 2, color: const Color(0xFF3EB48C)),
+                  height: 130, width: 2.5, color: const Color(0xFF3EB48C)),
               scaleMarkerPositionTop: 0,
               scaleMarkerPositionLeft: rulerMarkerPositionLeft + 5,
               scaleAlignment: Alignment.bottomCenter,
               scaleIntervalText: (index, value) => value.toInt().toString(),
               scaleIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
-              scaleIntervalTextPosition: 40,
+              scaleIntervalTextPosition: 45,
               scaleIntervalStyles: const [
                 ScaleIntervalStyle(
-                    color: Colors.blue, width: 2, height: 30, scale: -1),
+                    color: Colors.white, width: 2, height: 30, scale: -1),
                 ScaleIntervalStyle(
                     color: Colors.red, width: 2, height: 35, scale: 5),
                 ScaleIntervalStyle(
                     color: Colors.yellow, width: 2, height: 45, scale: 0),
               ],
               onValueChanged: (value) =>
-                  setState(() => currentWeight = value.toDouble()),
+                  setState(() => currentWeightInKilogram = value.toDouble()),
               width: MediaQuery.of(context).size.width,
               height: 90,
               scaleMargin: 9,
@@ -419,7 +419,7 @@ class _WeightInKgState extends State<WeightInKg> {
           bottom: 10,
           left: 140,
           child: Text(
-            "${currentWeight.toInt()} ${_scaleUnit.symbol}",
+            "${currentWeightInKilogram.toInt()} ${_scaleUnit.symbol}",
             style: TextStyle(
               fontSize: 34,
               fontWeight: FontWeight.w600,
@@ -442,14 +442,12 @@ class WeightInLbs extends StatefulWidget {
 }
 
 class _WeightInLbsState extends State<WeightInLbs> {
-  double currentWeight = 60.0;
+  double currentWeightInPound = 56.0;
   late final ScaleController _unitController;
-  final darkThemeColor = const Color(0xFF0b1f28);
-  final lightThemeColor = const Color(0xffdce2e5);
 
   @override
   void initState() {
-    _unitController = ScaleController(value: currentWeight);
+    _unitController = ScaleController(value: currentWeightInPound);
     super.initState();
   }
 
@@ -492,21 +490,21 @@ class _WeightInLbsState extends State<WeightInLbs> {
             scaleIntervalTextPosition: 50,
             scaleIntervalStyles: const [
               ScaleIntervalStyle(
-                  color: Colors.grey, width: 2, height: 35, scale: -1),
+                  color: Colors.lightGreenAccent, width: 2, height: 35, scale: -1),
               ScaleIntervalStyle(
-                  color: Colors.grey, width: 2, height: 35, scale: 5),
+                  color: Colors.lightGreenAccent, width: 2, height: 35, scale: 5),
               ScaleIntervalStyle(
-                  color: Colors.grey, width: 2, height: 45, scale: 0)
+                  color: Colors.red, width: 2, height: 45, scale: 0)
             ],
             onValueChanged: (value) =>
-                setState(() => currentWeight = value.toDouble()),
+                setState(() => currentWeightInPound = value.toDouble()),
           ),
         ),
         Positioned(
           bottom: 90,
           left: 170,
           child: Text(
-            "${currentWeight.toInt()} lbs",
+            "${currentWeightInPound.toInt()} lbs",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,

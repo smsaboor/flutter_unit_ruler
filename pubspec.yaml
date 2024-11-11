@@ -1,6 +1,6 @@
 name: flutter_unit_ruler
 description: A Digital ruler for measuring various units like weight (kg, lbs) and length (ft, cm, meter, km), perfect for construction, fitness, and educational apps..
-version: 0.0.18
+version: 0.0.19
 homepage: https://github.com/smsaboor/flutter_unit_ruler.git
 
 environment:
