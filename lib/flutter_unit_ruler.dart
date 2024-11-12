@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_unit_ruler/scale_controller.dart';
 import 'package:flutter_unit_ruler/scale_interval.dart';
@@ -424,18 +425,21 @@ class UnitRulerState extends State<UnitRuler> {
                     width: double.infinity,
                     height: double.infinity,
                     color: widget.backgroundColor,
-                    child: ListView.builder(
-                      // padding: EdgeInsets.only(
-                      //   left: (widget.width - _ruleScaleInterval) / (widget.scrollDirection == Axis.horizontal ? 2.32 : 3 ),
-                      //   right: (widget.width - _ruleScaleInterval) / (widget.scrollDirection == Axis.horizontal ? 2 : 4 ),
-                      //   top: widget.scrollDirection == Axis.horizontal ? 0 : (widget.width - _ruleScaleInterval) / 1.85, // comment it if want horizontal ruler
-                      // ),
-                      padding: widget.scalePadding,
-                      itemExtent: _ruleScaleInterval,
-                      itemCount: itemCount,
-                      controller: scrollController,
-                      scrollDirection: widget.scrollDirection,
-                      itemBuilder: _buildRulerScale,
+                    child: ScrollConfiguration(
+                      behavior: _DraggableScrollBehavior(),
+                      child: ListView.builder(
+                        // padding: EdgeInsets.only(
+                        //   left: (widget.width - _ruleScaleInterval) / (widget.scrollDirection == Axis.horizontal ? 2.32 : 3 ),
+                        //   right: (widget.width - _ruleScaleInterval) / (widget.scrollDirection == Axis.horizontal ? 2 : 4 ),
+                        //   top: widget.scrollDirection == Axis.horizontal ? 0 : (widget.width - _ruleScaleInterval) / 1.85, // comment it if want horizontal ruler
+                        // ),
+                        padding: widget.scalePadding,
+                        itemExtent: _ruleScaleInterval,
+                        itemCount: itemCount,
+                        controller: scrollController,
+                        scrollDirection: widget.scrollDirection,
+                        itemBuilder: _buildRulerScale,
+                      ),
                     ))),
           ),
           Positioned(
@@ -530,4 +534,15 @@ class UnitRulerState extends State<UnitRuler> {
     scrollController.jumpTo(offsetValue);
     fixOffset();
   }
+}
+
+
+
+class _DraggableScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.stylus,
+  };
 }

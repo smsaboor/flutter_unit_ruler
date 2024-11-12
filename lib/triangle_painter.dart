@@ -13,9 +13,7 @@
 // limitations under the License.
 
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// a triangle painter
 class TrianglePainter extends CustomPainter {

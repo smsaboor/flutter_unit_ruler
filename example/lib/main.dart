@@ -1,3 +1,4 @@
+import 'package:example/explain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_unit_ruler/flutter_unit_ruler.dart';
 import 'package:flutter_unit_ruler/scale_interval.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Material");
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
@@ -32,86 +34,107 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
   String heightUnit = 'Ft';
   String weightUnit = 'Kg';
   bool isDarkTheme = true;
-
-
+  late TabController _tabController;
   void setRange(String? value) => setState(() => heightUnit = value!);
 
   void setWeightUnit(String? value) => setState(() => weightUnit = value!);
 
+
+  @override
+  void initState() {
+    _tabController = TabController(length: 2, vsync: this);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose(); // Dispose of the controller when done
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-          backgroundColor: isDarkTheme ? darkThemeColor : lightThemeColor,
-          appBar: AppBar(
-            title: const Text('Ruler Demo'),
-            actions: [
-              Switch(
-                value: isDarkTheme,
-                onChanged: (value) => setState(() => isDarkTheme = value),
-              ),
-            ],
-            bottom: const TabBar(
-              tabs: [
-                Tab(text: 'Vertical Ruler'),
-                Tab(text: 'Horizontal Ruler'),
-              ],
+    print("_HeightInInchesState");
+    return Scaffold(
+        backgroundColor: isDarkTheme ? darkThemeColor : lightThemeColor,
+        appBar: AppBar(
+          title: const Text('Ruler Demo'),
+          actions: [
+            Switch(
+              value: isDarkTheme,
+              onChanged: (value) => setState(() => isDarkTheme = value),
             ),
+          ],
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: [
+              const Tab(text: 'Vertical Ruler'),
+              const Tab(text: 'Horizontal Ruler'),
+            ],
           ),
-          body: TabBarView(children: [
+        ),
+        body: DefaultTabController(
+          length: 2,
+          child: TabBarView(
+              controller: _tabController,
+              children: [
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: Column(
-                children: [
-                  Text(
-                    "Height in",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: isDarkTheme ? Colors.white : Colors.black54,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Height in",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkTheme ? Colors.white : Colors.black54,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: ['Ft', 'Cm'].map((unit) {
-                      return Row(
-                        children: [
-                          Transform.scale(
-                            scale: 1.1,
-                            child: Radio<String>(
-                              value: unit,
-                              activeColor: Colors.white70,
-                              groupValue: heightUnit,
-                              onChanged: setRange,
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: ['Ft', 'Cm'].map((unit) {
+                        return Row(
+                          children: [
+                            Transform.scale(
+                              scale: 1.1,
+                              child: Radio<String>(
+                                value: unit,
+                                activeColor: Colors.white70,
+                                groupValue: heightUnit,
+                                onChanged: setRange,
+                              ),
                             ),
-                          ),
-                          Text(
-                            unit,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: isDarkTheme ? Colors.white : Colors.black54,
+                            Text(
+                              unit,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color:
+                                    isDarkTheme ? Colors.white : Colors.black54,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 50),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 50),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: heightUnit == "Ft"
-                        ? HeightInInches(isDarkTheme: isDarkTheme)
-                        : HeightInCm(isDarkTheme: isDarkTheme),
-                  ),
-                ],
+                            const SizedBox(width: 50),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 50),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: heightUnit == "Ft"
+                          ? HeightInInches(isDarkTheme: isDarkTheme)
+                          : HeightInCm(isDarkTheme: isDarkTheme),
+                    ),
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -146,7 +169,8 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: isDarkTheme ? Colors.white : Colors.black54,
+                              color:
+                                  isDarkTheme ? Colors.white : Colors.black54,
                             ),
                           ),
                           const SizedBox(width: 50),
@@ -164,8 +188,8 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-          ])),
-    );
+          ]),
+        ));
   }
 }
 
@@ -185,6 +209,7 @@ class _HeightInInchesState extends State<HeightInInches> {
 
   @override
   void initState() {
+    print("_HeightInInchesState");
     _scaleUnit = UnitType.length.inch;
     _unitController = ScaleController(value: currentHeightInInches);
     super.initState();
@@ -192,35 +217,46 @@ class _HeightInInchesState extends State<HeightInInches> {
 
   @override
   Widget build(BuildContext context) {
-    final rulerBackgroundColor = widget.isDarkTheme ? darkThemeColor : lightThemeColor;
+    final rulerBackgroundColor =
+        widget.isDarkTheme ? darkThemeColor : lightThemeColor;
     final textColor = widget.isDarkTheme ? Colors.grey : Colors.black54;
-    const double rulerMarkerPositionTop = 170.0;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 0.0, right: 30),
+          padding: const EdgeInsets.only(right: 80.0),
           child: UnitRuler(
-            height: 400,
-            width: MediaQuery.of(context).size.width,
+            height: screenHeight * 0.6,  // Adjust based on available height
+            width: 400,  // Adjust based on available width
             scaleUnit: _scaleUnit,
             controller: _unitController,
             scrollDirection: Axis.vertical,
             backgroundColor: rulerBackgroundColor,
-            scalePadding: const EdgeInsets.only(
-                left: 190, right: 0, top: rulerMarkerPositionTop),
+            scalePadding: EdgeInsets.only(
+              left: 70,
+              right: 0,
+              top: screenWidth * 0.38,
+            ),
             scaleAlignment: Alignment.topRight,
-            scaleMargin: 80,
+            scaleMargin: 0,
             scaleMarker: Container(
-                height: 2, width: 200, color: const Color(0xFF3EB48C)),
-            scaleMarkerPositionTop: rulerMarkerPositionTop,
-            scaleMarkerPositionLeft: 160,
+              height: 2,
+              width: 200,  // Adjust marker width for responsiveness
+              color: const Color(0xFF3EB48C),
+            ),
+            scaleMarkerPositionTop: screenHeight *.18,
+            scaleMarkerPositionLeft: 90,
             scaleIntervalText: (index, value) {
               final feet = value ~/ 12;
               final inches = (value % 12).toInt();
               return inches == 0 ? "$feet.0" : "$feet.$inches";
             },
-            scaleIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
-            scaleIntervalTextPosition: 0,
+            scaleIntervalTextStyle: TextStyle(
+              color: textColor,
+              fontSize: 14, // Responsive text size
+            ),
+            scaleIntervalTextPosition: 80,
             scaleIntervalStyles: const [
               ScaleIntervalStyle(
                   color: Colors.white70, width: 35, height: 2, scale: -1),
@@ -234,24 +270,25 @@ class _HeightInInchesState extends State<HeightInInches> {
           ),
         ),
         Positioned(
-          // bottom: 220,
-          left: 150,
-          top: 130,
+          left: 100,
+          top: screenHeight * 0.14,
           child: Text(
             "${_formatFeetAndInches(currentHeightInInches)} Ft",
             style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w600,
-                color: widget.isDarkTheme ? Colors.white : Colors.black54),
+              fontSize: 24,  // Responsive text size
+              fontWeight: FontWeight.w600,
+              color: widget.isDarkTheme ? Colors.white : Colors.black54,
+            ),
           ),
         ),
         Positioned(
-            bottom: 0,
-            left: 125,
-            child: Image.asset(
-              'assets/girl.png',
-              height: 300,
-            )),
+          bottom: screenHeight * 0.001,
+          left: 100,
+          child: Image.asset(
+            'assets/girl.png',
+            height: screenHeight * 0.4,  // Scale image height based on screen height
+          ),
+        ),
       ],
     );
   }
@@ -316,11 +353,17 @@ class HeightInCmState extends State<HeightInCm> {
             scaleIntervalTextPosition: 0,
             scaleIntervalStyles: const [
               ScaleIntervalStyle(
-                  color: const Color(0xFFBCC2CB), width: 35, height: 2, scale: -1),
+                  color: const Color(0xFFBCC2CB),
+                  width: 35,
+                  height: 2,
+                  scale: -1),
               ScaleIntervalStyle(
                   color: Colors.limeAccent, width: 50, height: 2.5, scale: 0),
               ScaleIntervalStyle(
-                  color: const Color(0xFFBCC2CB), width: 40, height: 2, scale: 5),
+                  color: const Color(0xFFBCC2CB),
+                  width: 40,
+                  height: 2,
+                  scale: 5),
             ],
             onValueChanged: (value) =>
                 setState(() => currentHeightInCentimeter = value.toDouble()),
@@ -384,17 +427,19 @@ class _WeightInKgState extends State<WeightInKg> {
           child: Padding(
             padding: const EdgeInsets.only(bottom: 85.0),
             child: UnitRuler(
+              height: 90,
+              width: MediaQuery.of(context).size.width,
               controller: _unitController,
-              scaleUnit: _scaleUnit,
               scrollDirection: Axis.horizontal,
               backgroundColor: rulerBackgroundColor,
-              scalePadding: const EdgeInsets.only(
-                  left: rulerMarkerPositionLeft, right: 0, top: 0, bottom: 40),
+              scaleUnit: _scaleUnit,
+              scaleAlignment: Alignment.topCenter,
+              scalePadding:  EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width*.49 ,right: 0, top: 0, bottom: 40),
               scaleMarker: Container(
                   height: 130, width: 2.5, color: const Color(0xFF3EB48C)),
               scaleMarkerPositionTop: 0,
-              scaleMarkerPositionLeft: rulerMarkerPositionLeft + 4,
-              scaleAlignment: Alignment.topCenter,
+              scaleMarkerPositionLeft: MediaQuery.of(context).size.width * .5,
               scaleIntervalText: (index, value) => value.toInt().toString(),
               scaleIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
               scaleIntervalTextPosition: 5,
@@ -408,15 +453,13 @@ class _WeightInKgState extends State<WeightInKg> {
               ],
               onValueChanged: (value) =>
                   setState(() => currentWeightInKilogram = value.toDouble()),
-              width: MediaQuery.of(context).size.width,
-              height: 90,
               scaleMargin: 9,
             ),
           ),
         ),
         Positioned(
           bottom: 10,
-          left: 140,
+          left:  MediaQuery.of(context).size.width * .5,
           child: Text(
             "${currentWeightInKilogram.toInt()} ${_scaleUnit.symbol}",
             style: TextStyle(
@@ -461,8 +504,13 @@ class _WeightInLbsState extends State<WeightInLbs> {
         Padding(
           padding: const EdgeInsets.only(left: 20.0, top: 40),
           child: UnitRuler(
-          // scaleUnit: UnitType.weight.pound, or
-          scaleUnit: ScaleUnit(
+            height: 100,
+            width: MediaQuery.of(context).size.width,
+            controller: _unitController,
+            backgroundColor: rulerBackgroundColor,
+            scrollDirection: Axis.horizontal,
+            // scaleUnit: UnitType.weight.pound, or
+            scaleUnit: ScaleUnit(
               name: 'pound',
               symbol: 'lb',
               subDivisionCount: 10,
@@ -471,21 +519,16 @@ class _WeightInLbsState extends State<WeightInLbs> {
                   (i) => ScaleIntervals(
                       begin: i * 10, end: (i + 1) * 10, scale: 1)),
             ),
-            controller: _unitController,
-            height: 100,
-            width: MediaQuery.of(context).size.width,
-            backgroundColor: rulerBackgroundColor,
-            scalePadding: const EdgeInsets.only(
-                left: rulerMarkerPositionLeft, right: 0, top: 0, bottom: 0),
-            scrollDirection: Axis.horizontal,
+            scaleMargin: 9,
+            scalePadding:  EdgeInsets.only(
+                left: MediaQuery.of(context).size.width*.49 , right: 0, top: 0, bottom: 0),
             scaleMarker: Container(
                 height: 210, width: 2, color: const Color(0xFF46E252)),
             scaleMarkerPositionTop: 10,
-            scaleMarkerPositionLeft: rulerMarkerPositionLeft + 5,
+            scaleMarkerPositionLeft: MediaQuery.of(context).size.width * .5,
             scaleAlignment: Alignment.bottomCenter,
-            scaleMargin: 9,
-            scaleIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
             scaleIntervalText: (index, value) => value.toInt().toString(),
+            scaleIntervalTextStyle: TextStyle(color: textColor, fontSize: 14),
             scaleIntervalTextPosition: 50,
             scaleIntervalStyles: const [
               ScaleIntervalStyle(
@@ -501,7 +544,7 @@ class _WeightInLbsState extends State<WeightInLbs> {
         ),
         Positioned(
           bottom: 90,
-          left: 170,
+          left:  MediaQuery.of(context).size.width * .5,
           child: Text(
             "${currentWeightInPound.toInt()} lbs",
             style: TextStyle(

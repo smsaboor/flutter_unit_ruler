@@ -29,7 +29,7 @@ To use this package :
 ```packges
 import 'package:flutter/material.dart';
 import 'package:flutter_unit_ruler/flutter_unit_ruler.dart';
-import 'package:flutter_unit_ruler/unit.dart';
+import 'package:flutter_unit_ruler/scale_unit.dart';
 import 'package:flutter_unit_ruler/scale_controller.dart';
 import 'package:flutter_unit_ruler/scale_line.dart';
 ```
