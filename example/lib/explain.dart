@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_unit_ruler/flutter_unit_ruler.dart';
-import 'package:flutter_unit_ruler/scale_interval.dart';
-import 'package:flutter_unit_ruler/scale_unit.dart';
-import 'package:flutter_unit_ruler/scale_controller.dart';
-import 'package:flutter_unit_ruler/scale_line.dart';
 
 
 class RulerExample extends StatefulWidget {
