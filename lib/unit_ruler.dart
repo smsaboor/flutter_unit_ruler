@@ -17,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_unit_ruler/scale_controller.dart';
 import 'package:flutter_unit_ruler/scale_interval.dart';
 import 'package:flutter_unit_ruler/scale_line.dart';
-import 'package:flutter_unit_ruler/triangle_painter.dart';
 import 'package:flutter_unit_ruler/scale_unit.dart';
 
 /// A callback function signature used for notifying when a ruler value has changed.
@@ -65,7 +64,7 @@ class UnitRuler extends StatefulWidget {
   /// A widget that represents the marker displayed on the ruler.
   ///
   /// This widget could be a custom graphic or indicator to mark specific points on the ruler. If `null`, no marker is displayed.
-  final Widget? scaleMarker;
+  final Widget scaleMarker;
 
   /// The margin around the ruler, providing space between the ruler and its surrounding widgets.
   ///
@@ -125,6 +124,7 @@ class UnitRuler extends StatefulWidget {
     required this.scalePadding,
     required this.scaleAlignment,
     required this.scrollDirection,
+    required this.scaleMarker,
     required this.scaleMarkerPositionTop,
     required this.scaleMarkerPositionLeft,
     required this.height,
@@ -144,7 +144,6 @@ class UnitRuler extends StatefulWidget {
       color: Color.fromARGB(255, 188, 194, 203),
       fontSize: 14,
     ),
-    this.scaleMarker,
     this.backgroundColor = Colors.white,
     this.controller,
   });
@@ -232,37 +231,7 @@ class UnitRulerState extends State<UnitRuler> {
     widget.onValueChanged(currentValue);
   }
 
-  /// default mark
-  Widget _buildMark() {
-    /// default mark arrow
-    Widget triangle() {
-      return SizedBox(
-        width: 15,
-        height: 15,
-        child: CustomPaint(
-          painter: TrianglePainter(),
-        ),
-      );
-    }
-
-    return SizedBox(
-      width: _ruleScaleInterval * 2,
-      height: 45,
-      child: Stack(
-        children: <Widget>[
-          Align(alignment: Alignment.topCenter, child: triangle()),
-          Align(
-              child: Container(
-                width: 3,
-                height: 34,
-                color: const Color.fromARGB(255, 118, 165, 248),
-              )),
-        ],
-      ),
-    );
-  }
-
-  ///绘制刻度线
+  /// Scale lines for ruler
   Widget _buildRulerScaleLine(int index) {
     double width = 0;
     double height = 0;
@@ -445,7 +414,7 @@ class UnitRulerState extends State<UnitRuler> {
           Positioned(
               top: widget.scaleMarkerPositionTop,
               left: widget.scaleMarkerPositionLeft,
-              child: widget.scaleMarker ?? _buildMark())
+              child: widget.scaleMarker)
           // Align(
           //   alignment: widget.scrollDirection == Axis.horizontal ? Alignment.topCenter : Alignment.center,
           //   child: widget.rulerMarker ?? _buildMark(),
